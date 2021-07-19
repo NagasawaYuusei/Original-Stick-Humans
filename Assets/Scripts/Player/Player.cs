@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     public float Speed;//スピード
     float m_h;//水平横
+    float m_v;
     [SerializeField] float m_Jumpryoku = 15f;//ジャンプ力
     [SerializeField] float settiLength = 0.5f;//ジャンプ判定の長さ
     [SerializeField] float bkLength = 5f;
@@ -39,9 +40,6 @@ public class Player : MonoBehaviour
     public Color[] m_colors = default;
     public float toumeitime = 0f;
 
-
-    GameObject m_mode;
-    PlayerStates playerstate;
     int n_attack = default;
     int n_passive = default;
     public int n_active = default;
@@ -58,15 +56,12 @@ public class Player : MonoBehaviour
 
     //AudioSource audioSource;
 
-    //private Animator anim = null;
+    private Animator anim = null;
 
     void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
         m_sp = GetComponent<SpriteRenderer>();
-
-        m_mode = GameObject.Find("Player States");
-        playerstate = m_mode.GetComponent<PlayerStates>();
 
         m_sp.color = m_colors[0];
 
@@ -74,9 +69,9 @@ public class Player : MonoBehaviour
         playerHPslider.maxValue = playerHP;
         playerHPslider.value = playerHP;
 
-        n_attack = playerstate.m_attack;
-        n_passive = playerstate.m_passive;
-        n_active = playerstate.m_active;
+        n_attack = PlayerStates.m_attack;
+        n_passive = PlayerStates.m_passive;
+        n_active = PlayerStates.m_active;
 
         if (n_passive == 2)
         {
@@ -88,26 +83,14 @@ public class Player : MonoBehaviour
 
         //audioSource = GetComponent<AudioSource>();
 
-        //anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
 
     }
 
     void Update()
     {
         m_h = Input.GetAxis("Horizontal");//移動入力
-
-        //if (m_h > 0)
-        //{
-        //    anim.SetBool("run", true);
-        //}
-        //else if (m_h < 0)
-        //{
-        //    anim.SetBool("run", true);
-        //}
-        //else
-        //{
-        //    anim.SetBool("run", false);
-        //}
+        m_v = Input.GetAxis("Vertical");
 
         Vector2 tmp = this.transform.position;//自分の位置
 
@@ -126,19 +109,8 @@ public class Player : MonoBehaviour
                 if (gd() || m_jc <= 1)
                 {
                     m_jc++;
-                    m_rb.AddForce(Vector2.up.normalized * m_Jumpryoku, ForceMode2D.Impulse);
-                    //audioSource.PlayOneShot(soundjump);
-                    //anim.SetBool("jump", true);
-                }
-            }
+                    m_rb.velocity = new Vector2(m_rb.velocity.x,m_Jumpryoku);
 
-            else
-            {
-                if (gd() == true)
-                {
-                    m_rb.AddForce(Vector2.up.normalized * m_Jumpryoku, ForceMode2D.Impulse);
-                    //audioSource.PlayOneShot(soundjump);
-                    //anim.SetBool("jump", true);
                 }
             }
 
@@ -289,12 +261,17 @@ public class Player : MonoBehaviour
     {
         if (n_passive == 3)
         {
-            m_rb.AddForce(Vector2.right * m_h * Speed * 2, ForceMode2D.Impulse);//移動
+            m_rb.velocity = new Vector2(Speed * m_h * 2, m_rb.velocity.y);//移動
+            
         }
 
         else
         {
-            m_rb.AddForce(Vector2.right * m_h * Speed, ForceMode2D.Impulse);//移動
+            m_rb.velocity = new Vector2(Speed * m_h, m_rb.velocity.y);//移動
+        }
+        if(0 < m_h || m_h < 0)
+        {
+            anim.Play("Player_run");
         }
 
 
@@ -312,6 +289,7 @@ public class Player : MonoBehaviour
         else if (horizontal < 0)
         {
             this.transform.localScale = new Vector2(-1 * Mathf.Abs(this.transform.localScale.x), this.transform.localScale.y);
+            anim.Play("Player_run");
         }
     }
 

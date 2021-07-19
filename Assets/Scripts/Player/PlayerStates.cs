@@ -11,12 +11,11 @@ public class PlayerStates : MonoBehaviour
     PlayerMode Attackscript;
     PlayerMode Passivescript;
     PlayerMode Activescript;
-    public int m_attack = default;
-    public int m_passive = default;
-    public int m_active = default;
+    static public int m_attack = default;
+    static public int m_passive = default;
+    static public int m_active = default;
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
         m_Attackmode = GameObject.Find("Atack Mode");
         m_Passivemode = GameObject.Find("Passive Mode");
         m_Activemode = GameObject.Find("Active Mode");

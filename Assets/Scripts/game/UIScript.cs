@@ -30,7 +30,7 @@ public class UIScript : MonoBehaviour
         m_text = GameObject.Find("cooltime").GetComponent<Text>();
         panel = GameObject.Find("Panel");
 
-        m_Player = GameObject.Find("Player stand");
+        m_Player = GameObject.Find("Player");
         playerstate = m_Player.GetComponent<Player>();
 
         o_active = playerstate.n_active;
