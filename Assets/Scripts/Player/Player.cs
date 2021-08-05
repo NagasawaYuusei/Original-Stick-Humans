@@ -181,14 +181,19 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))//ジャンプ
         {
-            Debug.Log("a");
             if (s_passive == 0)
             {
                 if (gd() || m_jc <= 1)
                 {
-                    Debug.Log("jump");
                     m_jc++;
                     m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);
+                }
+            }
+            else
+            {
+                if(gd())
+                {
+                    m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);                              
                 }
             }
         }
