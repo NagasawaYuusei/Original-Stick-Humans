@@ -290,7 +290,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -385,11 +385,13 @@ MonoBehaviour:
   time: 3
   timeOut: 10
   m_shot: {fileID: 2647469869824184920, guid: b459e04307330974c986f60990517932, type: 3}
+  m_slider: {fileID: 0}
   destroySound: {fileID: 8300000, guid: 46f8c062a9d90044e871557dc9e31d8f, type: 3}
   enemyHP: 20
   enemynum: 0
   soundbow: {fileID: 8300000, guid: 41e37f591c5d1f743883489db9d983d6, type: 3}
   soundbeem: {fileID: 8300000, guid: d01195f38db0a1444935baa60c83b3f4, type: 3}
+  soundboss: {fileID: 0}
 --- !u!82 &7360255377076014095
 AudioSource:
   m_ObjectHideFlags: 0
