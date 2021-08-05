@@ -55,7 +55,7 @@ public class bossEnemy : MonoBehaviour
     void Update()
     {
 
-        if (m_sr.isVisible && playercoler.color == m_player.m_colors[0] || m_sr.isVisible && playercoler.color == m_player.m_colors[2])
+        if (m_sr.isVisible && playercoler.color == m_player.Colors[0] || m_sr.isVisible && playercoler.color == m_player.Colors[2])
         {
             Invoke("enemy", time);
             if (!isCalledOnce)

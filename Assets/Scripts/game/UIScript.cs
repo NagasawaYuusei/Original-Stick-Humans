@@ -33,7 +33,7 @@ public class UIScript : MonoBehaviour
         m_Player = GameObject.Find("Player");
         playerstate = m_Player.GetComponent<Player>();
 
-        o_active = playerstate.n_active;
+        o_active = playerstate.Active;
 
        
 
@@ -42,11 +42,11 @@ public class UIScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        n_bk = playerstate.bktime;
-        n_wall = playerstate.walltime;
-        n_heal = playerstate.healtime;
-        n_stelth = playerstate.stelthtime;
-        n_timeElapsed = playerstate.timeElapsed;
+        n_bk = playerstate.BkTime;
+        n_wall = playerstate.WlTime;
+        n_heal = playerstate.HlTime;
+        n_stelth = playerstate.SlTime;
+        n_timeElapsed = playerstate.TimeSkill;
 
         o_bk = n_bk - n_timeElapsed;
         o_wall = n_wall - n_timeElapsed;

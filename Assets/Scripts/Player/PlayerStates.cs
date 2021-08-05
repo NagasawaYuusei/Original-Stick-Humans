@@ -5,31 +5,59 @@ using UnityEngine;
 public class PlayerStates : MonoBehaviour
 {
 
-    GameObject m_Attackmode;
-    GameObject m_Passivemode;
-    GameObject m_Activemode;
-    PlayerMode Attackscript;
-    PlayerMode Passivescript;
-    PlayerMode Activescript;
-    static public int m_attack = default;
-    static public int m_passive = default;
-    static public int m_active = default;
+    GameObject m_attackstates;
+    GameObject m_passivestates;
+    GameObject m_activestates;
+    PlayerMode m_attackscript;
+    PlayerMode m_passivescript;
+    PlayerMode m_activescript;
+    static int m_attack = default;
+    static int m_passive = default;
+    static int m_active = default;
+
+    public static int AttackStates
+    {
+        get
+        {
+            return m_attack;
+        }
+
+    }
+
+    public static int PassiveStates
+    {
+        get
+        {
+            return m_passive;
+        }
+
+    }
+
+    public static int ActiveStates
+    {
+        get
+        {
+            return m_active;
+        }
+
+    }
     void Start()
     {
-        m_Attackmode = GameObject.Find("Atack Mode");
-        m_Passivemode = GameObject.Find("Passive Mode");
-        m_Activemode = GameObject.Find("Active Mode");
+        m_attackstates = GameObject.Find("Atack Mode");
+        m_passivestates = GameObject.Find("Passive Mode");
+        m_activestates = GameObject.Find("Active Mode");
 
-        Attackscript = m_Attackmode.GetComponent<PlayerMode>();
-        Passivescript = m_Passivemode.GetComponent<PlayerMode>();
-        Activescript = m_Activemode.GetComponent<PlayerMode>();
+        m_attackscript = m_attackstates.GetComponent<PlayerMode>();
+        m_passivescript = m_passivestates.GetComponent<PlayerMode>();
+        m_activescript = m_activestates.GetComponent<PlayerMode>();
     }
+
 
     void Update()
     {
-        m_attack = Attackscript.attackmode;
-        m_passive = Passivescript.passivemode;
-        m_active = Activescript.activemode;
+        m_attack = m_attackscript.Attackmode;
+        m_passive = m_passivescript.Passivemode;
+        m_active = m_activescript.Activemode;
         //Debug.Log("Attackmode"+ m_attack+ ",passivemode"+m_passive+ ",activemode"+m_active) ;
     }
 

@@ -6,69 +6,96 @@ using UnityEngine.UI;
 public class PlayerMode : MonoBehaviour
 {
 
-    public GameObject ChangeButton;
-    public int attackmode = 0;
-    public int passivemode = 0;
-    public int activemode = 0;
+    [SerializeField]GameObject ChangeButton;
+    int m_attackmode = 0;
+    int m_passivemode = 0;
+    int m_activemode = 0;
+
+    public int Attackmode
+    {
+        get
+        {
+            return m_attackmode;
+        }
+
+    }
+
+    public int Passivemode
+    {
+        get
+        {
+            return m_passivemode;
+        }
+
+    }
+
+    public int Activemode
+    {
+        get
+        {
+            return m_activemode;
+        }
+
+    }
 
     public void Attack()
     {
-        if (attackmode == 0)
+        if (m_attackmode == 0)
         {
-            attackmode = 1;
+            m_attackmode = 1;
             ChangeButton.GetComponentInChildren<Text>().text = "Bow";
         }
         else
         {
-            attackmode = 0;
+            m_attackmode = 0;
             ChangeButton.GetComponentInChildren<Text>().text = "Sword";
         }
     }
 
     public void Passive()
     {
-        if (passivemode == 0)
+        if (m_passivemode == 0)
         {
-            passivemode = 1;
+            m_passivemode = 1;
             ChangeButton.GetComponentInChildren<Text>().text = "Flow";
         }
-        else if(passivemode == 1)
+        else if(m_passivemode == 1)
         {
-            passivemode = 2;
+            m_passivemode = 2;
             ChangeButton.GetComponentInChildren<Text>().text = "Health";
         }
-        else if (passivemode == 2)
+        else if (m_passivemode == 2)
         {
-            passivemode = 3;
+            m_passivemode = 3;
             ChangeButton.GetComponentInChildren<Text>().text = "Speed";
         }
         else
         {
-            passivemode = 0;
+            m_passivemode = 0;
             ChangeButton.GetComponentInChildren<Text>().text = "Double";
         }
     }
 
     public void Active()
     {
-        if (activemode == 0)
+        if (m_activemode == 0)
         {
-            activemode = 1;
+            m_activemode = 1;
             ChangeButton.GetComponentInChildren<Text>().text = "Wall";
         }
-        else if (activemode == 1)
+        else if (m_activemode == 1)
         {
-            activemode = 2;
+            m_activemode = 2;
             ChangeButton.GetComponentInChildren<Text>().text = "Healing";
         }
-        else if (activemode == 2)
+        else if (m_activemode == 2)
         {
-            activemode = 3;
+            m_activemode = 3;
             ChangeButton.GetComponentInChildren<Text>().text = "Stealth";
         }
         else
         {
-            activemode = 0;
+            m_activemode = 0;
             ChangeButton.GetComponentInChildren<Text>().text = "Blink";
         }
     }
