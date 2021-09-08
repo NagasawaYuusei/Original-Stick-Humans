@@ -64,14 +64,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Player\FollowCamera.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStates.cs" />
-    <Compile Include="Assets\Scripts\Player\bow\bowScript.cs" />
-    <Compile Include="Assets\Scripts\Player\bow\bowxScript.cs" />
-    <Compile Include="Assets\Scripts\Player\sword\swordScript.cs" />
-    <Compile Include="Assets\Scripts\Player\sword\swordxScript.cs" />
+    <Compile Include="Assets\Scripts\Player\bowScript.cs" />
+    <Compile Include="Assets\Scripts\enemy\EnemyBase.cs" />
     <Compile Include="Assets\Scripts\enemy\bossEnemy.cs" />
     <Compile Include="Assets\Scripts\enemy\flyEnemy.cs" />
     <Compile Include="Assets\Scripts\enemy\longEnemy.cs" />

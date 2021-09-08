@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -25,14 +23,12 @@ public class Player : MonoBehaviour
     [SerializeField] int m_stelthtime;
     [SerializeField] float m_bowtime;
     [SerializeField] float m_swordtime;
+    [SerializeField] GameObject m_muzzle = default;
 
     [SerializeField] int m_playerhp = 1;
     [SerializeField] Slider m_playerhpslider;
 
-    [SerializeField] GameObject m_sword = default;
-    [SerializeField] GameObject m_swordx = default;
     [SerializeField] GameObject m_bow = default;
-    [SerializeField] GameObject m_bowx = default;
 
     [SerializeField] GameObject m_wall = default;
     [SerializeField] Color[] m_colors = default;
@@ -191,9 +187,9 @@ public class Player : MonoBehaviour
             }
             else
             {
-                if(gd())
+                if (gd())
                 {
-                    m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);                              
+                    m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);
                 }
             }
         }
@@ -211,14 +207,14 @@ public class Player : MonoBehaviour
         {
             if (m_timeElapsed2 >= m_swordtime)
             {
-                if (m_scaleX > 0)
-                {
-                    Instantiate(m_sword, new Vector2(tmp.x + 2, tmp.y), this.transform.rotation);
-                }
-                else if (m_scaleX < 0)
-                {
-                    Instantiate(m_swordx, new Vector2(tmp.x - 2, tmp.y), this.transform.rotation);
-                }
+                //if (m_scaleX > 0)
+                //{
+                //    Instantiate(m_sword, new Vector2(tmp.x + 2, tmp.y), this.transform.rotation);
+                //}
+                //else if (m_scaleX < 0)
+                //{
+                //    Instantiate(m_swordx, new Vector2(tmp.x - 2, tmp.y), this.transform.rotation);
+                //}
                 m_timeElapsed = 0.0f;
             }
         }
@@ -227,14 +223,8 @@ public class Player : MonoBehaviour
         {
             if (m_timeElapsed2 >= m_bowtime)
             {
-                if (m_scaleX > 0)
-                {
-                    Instantiate(m_bow, new Vector2(tmp.x + 2, tmp.y + 0.5f), this.transform.rotation);
-                }
-                else if (m_scaleX < 0)
-                {
-                    Instantiate(m_bowx, new Vector2(tmp.x - 2, tmp.y + 0.5f), this.transform.rotation);
-                }
+                Instantiate(m_bow, m_muzzle.transform.position, this.transform.rotation);
+
                 m_timeElapsed2 = 0.0f;
             }
         }

@@ -1,95 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using System.Collections;
 
-public class flyEnemy : MonoBehaviour
+public class flyEnemy : EnemyBase
 {
-    private SpriteRenderer m_sr = null;
-    private GameObject playerObject;
-    private Vector3 PlayerPosition;
-    public float speed = 0f;
-    public float time = 0f;
+    [SerializeField]float m_speed = 0f;
+    [SerializeField]float m_time = 0f;
 
-    SpriteRenderer playercoler;
-    Player m_player;
-
-    public AudioClip destroySound;
-    public int enemyHP;
-
-    Slider slider;
-    public int enemynum = 0;
-
-    public AudioClip soundbow;
-    AudioSource audioSource;
-
+    AudioClip destroySound;
+    AudioClip soundbow;
 
     void Start()
     {
-        m_sr = GetComponent<SpriteRenderer>();
-        playerObject = GameObject.FindWithTag("Player");
-
-        playercoler = playerObject.GetComponent<SpriteRenderer>();
-        m_player = playerObject.GetComponent<Player>();
-
-        PlayerPosition = playerObject.transform.position;
-
-        slider = GameObject.Find("EnemyHPSlider" + enemynum).GetComponent<Slider>();
-        slider.maxValue = enemyHP;
-        slider.value = enemyHP;
-
-        audioSource = GetComponent<AudioSource>();
+         base.StartSet();
     }
 
     void Update()
     {
-
-        if (m_sr.isVisible && playercoler.color == m_player.Colors[0] || m_sr.isVisible && playercoler.color == m_player.Colors[2])
+        if (m_sr.isVisible && m_srPlayer.color == m_player.Colors[0] || m_sr.isVisible && m_srPlayer.color == m_player.Colors[2])
         {
-            Invoke("enemy", time);
+            StartCoroutine(Enemy());
         }
-
     }
 
-    void enemy()
+    IEnumerator Enemy()
     {
+        yield return new WaitForSeconds(m_time);
 
-        PlayerPosition = playerObject.transform.position;
+        m_playerPosition = m_playerOblect.transform.position;
 
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, PlayerPosition, speed);
+        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, m_playerPosition, m_speed);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Bow"))
-        {
-            enemyHP -= 2;
-            slider.value = enemyHP;
-            audioSource.PlayOneShot(soundbow);
-            Destroy(collision.gameObject);
-
-            if (enemyHP <= 0)
-            {
-                Destroy(transform.root.gameObject);
-
-                AudioSource.PlayClipAtPoint(destroySound, transform.position);
-            }
-        }
-
-        if (collision.gameObject.CompareTag("Sword"))
-        {
-            enemyHP -= 1;
-            slider.value = enemyHP;
- 
-            Destroy(collision.gameObject);
-
-            if (enemyHP <= 0)
-            {
-                Destroy(transform.root.gameObject);
-
-                AudioSource.PlayClipAtPoint(destroySound, transform.position);
-            }
-        }
+        base.Damage(collision);
     }
-
 }

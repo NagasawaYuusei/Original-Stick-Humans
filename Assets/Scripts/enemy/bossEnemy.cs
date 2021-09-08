@@ -1,88 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-public class bossEnemy : MonoBehaviour
+﻿using UnityEngine;
+using System.Collections;
+public class bossEnemy : EnemyBase
 {
-    private SpriteRenderer m_sr = null;
-    private GameObject playerObject;
-    private Vector3 PlayerPosition;
-    private Vector3 EnemyPosition;
-    public float speed = 0f;
-    public float time = 0f;
+    [SerializeField] float m_speed = 0f;
+    [SerializeField] float m_time = 0f;
 
-    public float timeOut;
+    Vector3 m_enemyPosition;
+
+    [SerializeField]float timeOut;
     private float timeElapsed;
     [SerializeField] GameObject m_shot = default;
-    [SerializeField] Slider m_slider;
 
-    SpriteRenderer playercoler;
-    Player m_player;
+    //public AudioClip destroySound;
 
-    public AudioClip destroySound;
-    public int enemyHP;
-    Slider slider;
-    public int enemynum = 0;
-
-    public AudioClip soundbow;
-    public AudioClip soundbeem;
-    public AudioClip soundboss;
-    AudioSource audioSource;
+    //public AudioClip soundbow;
+    //public AudioClip soundbeem;
+    //public AudioClip soundboss;
+    //AudioSource audioSource;
 
     bool isCalledOnce = false;
 
     void Start()
     {
-        m_sr = GetComponent<SpriteRenderer>();
-        playerObject = GameObject.FindWithTag("Player");
-
-        playercoler = playerObject.GetComponent<SpriteRenderer>();
-        m_player = playerObject.GetComponent<Player>();
-
-        PlayerPosition = playerObject.transform.position;
-        EnemyPosition = transform.position;
-
-        m_slider = GetComponent<Slider>();
-        m_slider.maxValue = enemyHP;
-        m_slider.value = enemyHP;
-
-        audioSource = GetComponent<AudioSource>();
-
-
+        base.StartSet();
+        m_enemyPosition = transform.position;
     }
 
     void Update()
     {
-
-        if (m_sr.isVisible && playercoler.color == m_player.Colors[0] || m_sr.isVisible && playercoler.color == m_player.Colors[2])
+        if (m_sr.isVisible && m_srPlayer.color == m_player.Colors[0] || m_sr.isVisible && m_srPlayer.color == m_player.Colors[2])
         {
-            Invoke("enemy", time);
+            StartCoroutine(Enemy());
             if (!isCalledOnce)
             {
                 isCalledOnce = true;
-                audioSource.PlayOneShot(soundboss);
+                //audioSource.PlayOneShot(soundboss);
             }
-           
         }
-
     }
 
-    void enemy()
+    IEnumerator Enemy()
     {
-        PlayerPosition = playerObject.transform.position;
-        EnemyPosition = transform.position;
+        yield return new WaitForSeconds(m_time);
+        m_playerPosition = m_playerOblect.transform.position;
+        m_enemyPosition = transform.position;
 
-        if (PlayerPosition.x > EnemyPosition.x)
+        if (m_playerPosition.x > m_enemyPosition.x)
         {
-            EnemyPosition.x = EnemyPosition.x + speed;
+            m_enemyPosition.x = m_enemyPosition.x + m_speed;
         }
-        else if (PlayerPosition.x < EnemyPosition.x)
+        else if (m_playerPosition.x < m_enemyPosition.x)
         {
-            EnemyPosition.x = EnemyPosition.x - speed;
+            m_enemyPosition.x = m_enemyPosition.x - m_speed;
         }
 
-        transform.position = EnemyPosition;
+        transform.position = m_enemyPosition;
 
         Vector2 tmp = this.transform.position;
 
@@ -90,59 +62,27 @@ public class bossEnemy : MonoBehaviour
 
         if (timeElapsed >= timeOut)
         {
-            if (PlayerPosition.x < EnemyPosition.x)
+            if (m_playerPosition.x < m_enemyPosition.x)
             {
                 Instantiate(m_shot, new Vector2(tmp.x - 10f, tmp.y + 5.5f), this.transform.rotation);
                 Instantiate(m_shot, new Vector2(tmp.x - 11f, tmp.y + 1.8f), this.transform.rotation);
                 Instantiate(m_shot, new Vector2(tmp.x - 10f, tmp.y - 2.71f), this.transform.rotation);
             }
-            else if (PlayerPosition.x > EnemyPosition.x)
+            else if (m_playerPosition.x > m_enemyPosition.x)
             {
                 Instantiate(m_shot, new Vector2(tmp.x + 10f, tmp.y + 5.5f), this.transform.rotation);
                 Instantiate(m_shot, new Vector2(tmp.x + 11f, tmp.y + 1.8f), this.transform.rotation);
                 Instantiate(m_shot, new Vector2(tmp.x + 10f, tmp.y - 2.71f), this.transform.rotation);
             }
             timeElapsed = 0.0f;
-            audioSource.PlayOneShot(soundbeem);
+            //audioSource.PlayOneShot(soundbeem);
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Bow"))
-        {
-            enemyHP -= 2;
-            m_slider.value = enemyHP;
-            audioSource.PlayOneShot(soundbow);
-            Destroy(collision.gameObject);
-
-            if (enemyHP <= 0)
-            {
-
-                // AudioSource.PlayClipAtPoint(destroySound, transform.position);
-                Invoke("Gameclear", 1.5f);
-                this.gameObject.SetActive(false);
-            }
-        }
-
-        if (collision.gameObject.CompareTag("Sword"))
-        {
-            enemyHP -= 1;
-            m_slider.value = enemyHP;
-
-            Destroy(collision.gameObject);
-
-            if (enemyHP <= 0)
-            {
-                AudioSource.PlayClipAtPoint(destroySound, transform.position);
-                Invoke("Gameclear", 1.5f);
-                this.gameObject.SetActive(false);
-            }
-        }
+        base.BossDamage(collision);
     }
 
-    void Gameclear()
-    {
-        SceneManager.LoadScene("Gameclear");
-    }
+    
 }

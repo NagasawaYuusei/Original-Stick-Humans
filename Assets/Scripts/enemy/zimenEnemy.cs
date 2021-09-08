@@ -1,109 +1,51 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class zimenEnemy : MonoBehaviour
+public class zimenEnemy : EnemyBase
 {
-    private SpriteRenderer m_sr = null;
-    private GameObject playerObject;
-    private Vector3 PlayerPosition;
-    private Vector3 EnemyPosition;
-    public float speed = 0f;
-    public float time = 0f;
+    Vector3 m_enemyPosition;
 
-    SpriteRenderer playercoler;
-    Player m_player;
+    [SerializeField]float m_speed = 0f;
+    [SerializeField]float m_time = 0f;
 
-    public int enemyHP;
-
-    Slider slider;
-    public int enemynum = 0;
-
-
-    public AudioClip soundbow;
-    public AudioClip destroySound;
-    AudioSource audioSource;
-
+    //public AudioClip soundbow;
+    //public AudioClip destroySound;
 
     void Start()
     {
-        m_sr = GetComponent<SpriteRenderer>();
-        playerObject = GameObject.FindWithTag("Player");
-
-        playercoler = playerObject.GetComponent<SpriteRenderer>();
-        m_player = playerObject.GetComponent<Player>();
-
-        PlayerPosition = playerObject.transform.position;
-        EnemyPosition = transform.position;
-
-        slider = GameObject.Find("EnemyHPSlider"+enemynum).GetComponent<Slider>();
-        slider.maxValue = enemyHP;
-        slider.value = enemyHP;
-
-        audioSource = GetComponent<AudioSource>();
-
+        base.StartSet();
+        m_enemyPosition = transform.position;
     }
 
     void Update()
     {
-       
-        if (m_sr.isVisible && playercoler.color == m_player.Colors[0] || m_sr.isVisible && playercoler.color == m_player.Colors[2])
+        if (m_sr.isVisible && m_srPlayer.color == m_player.Colors[0] || m_sr.isVisible && m_srPlayer.color == m_player.Colors[2])
         {
-            Invoke("enemy", time);
+            StartCoroutine(Enemy());
         }
-        
     }
 
-    void enemy()
+    IEnumerator Enemy()
     {
-        PlayerPosition = playerObject.transform.position;
-        EnemyPosition = transform.position;
+        yield return new WaitForSeconds(m_time);
 
-        if (PlayerPosition.x > EnemyPosition.x)
+        m_playerPosition = m_playerOblect.transform.position;
+        m_enemyPosition = transform.position;
+
+        if (m_playerPosition.x > m_enemyPosition.x)
         {
-            EnemyPosition.x = EnemyPosition.x + speed;
+            m_enemyPosition.x = m_enemyPosition.x + m_speed;
         }
-        else if (PlayerPosition.x < EnemyPosition.x)
+        else if (m_playerPosition.x < m_enemyPosition.x)
         {
-            EnemyPosition.x = EnemyPosition.x - speed;
+            m_enemyPosition.x = m_enemyPosition.x - m_speed;
         }
 
-        transform.position = EnemyPosition;
+        transform.position = m_enemyPosition;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Bow"))
-        {
-            enemyHP -= 2;
-            slider.value = enemyHP;
-            audioSource.PlayOneShot(soundbow);
-            Destroy(collision.gameObject);
-
-            if (enemyHP <= 0)
-            {
-                Destroy(transform.root.gameObject);
-
-                AudioSource.PlayClipAtPoint(destroySound, transform.position);
-            }
-        }
-
-            if (collision.gameObject.CompareTag("Sword"))
-            {
-                enemyHP -= 1;
-                slider.value = enemyHP;
-
-                Destroy(collision.gameObject);
-
-                if (enemyHP <= 0)
-                {
-                    Destroy(transform.root.gameObject);
-
-                    AudioSource.PlayClipAtPoint(destroySound, transform.position);
-                }
-            }
-        
-
+        base.Damage(collision);
     }
 }
