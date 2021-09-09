@@ -38,7 +38,7 @@ public abstract class EnemyBase : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-  
+
     public virtual void Damage(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Bow"))
@@ -52,18 +52,16 @@ public abstract class EnemyBase : MonoBehaviour
                 Destroy(transform.root.gameObject);
             }
         }
+    }
 
-        if (collision.gameObject.CompareTag("Sword"))
+    public void SwordDamage()
+    {
+        m_enemyHp -= 1;
+        m_slider.value = m_enemyHp;
+
+        if (m_enemyHp <= 0)
         {
-            m_enemyHp -= 1;
-            m_slider.value = m_enemyHp;
-
-            Destroy(collision.gameObject);
-
-            if (m_enemyHp <= 0)
-            {
-                Destroy(transform.root.gameObject);
-            }
+            Destroy(transform.root.gameObject);
         }
     }
 

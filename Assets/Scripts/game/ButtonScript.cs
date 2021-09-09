@@ -7,8 +7,8 @@ public class ButtonScript : MonoBehaviour
 {
     GameObject setting;
 
-    public AudioClip sound1;
-    public AudioClip sound2;
+    [SerializeField] AudioClip sound1;
+    [SerializeField] AudioClip sound2;
     AudioSource audioSource;
     public void ButtonClassSetting()
     {

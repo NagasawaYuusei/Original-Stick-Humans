@@ -6,8 +6,8 @@ public class flyEnemy : EnemyBase
     [SerializeField]float m_speed = 0f;
     [SerializeField]float m_time = 0f;
 
-    AudioClip destroySound;
-    AudioClip soundbow;
+    //AudioClip destroySound;
+    //AudioClip soundbow;
 
     void Start()
     {

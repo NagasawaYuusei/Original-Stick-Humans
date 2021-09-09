@@ -19,7 +19,7 @@ public class UIScript : MonoBehaviour
     float o_wall;
     float o_heal;
     float o_stelth;
-    public int o_active = default;
+    int o_active = default;
 
     [SerializeField] private GameObject pauseUI  = default;
     Button button;

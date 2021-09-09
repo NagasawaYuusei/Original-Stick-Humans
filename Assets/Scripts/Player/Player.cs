@@ -9,11 +9,14 @@ public class Player : MonoBehaviour
     [SerializeField] int m_Jumpryoku = 15;//ジャンプ力
     [SerializeField] float m_settiLength = 0.5f;//ジャンプ判定の長さ
     [SerializeField] float m_bkLength = 5f;
+    [SerializeField] float m_swLength = 5f;
     [SerializeField] LayerMask m_kabe = default;
+    [SerializeField] LayerMask m_enemy = default;
     [SerializeField] bool m_flipX = false;
     Rigidbody2D m_rb = default;
     SpriteRenderer m_sp = default;
     int m_jc = 0;
+    bool m_swRay = false;
     float m_scaleX;
     float m_timeElapsed;
     float m_timeElapsed2;
@@ -41,6 +44,9 @@ public class Player : MonoBehaviour
     Vector2 tmp;
 
     Animator anim = null;
+
+    [SerializeField] bool m_swordRay;
+    [SerializeField] RaycastHit2D m_hit2d;
 
     public int Active
     {
@@ -155,6 +161,11 @@ public class Player : MonoBehaviour
         {
             FlipX(m_h);
         }
+
+        if(m_swordRay)
+        {
+            sw();
+        }
     }
     ///<summary>移動処理</summary>///
     void idou()
@@ -207,14 +218,19 @@ public class Player : MonoBehaviour
         {
             if (m_timeElapsed2 >= m_swordtime)
             {
-                //if (m_scaleX > 0)
-                //{
-                //    Instantiate(m_sword, new Vector2(tmp.x + 2, tmp.y), this.transform.rotation);
-                //}
-                //else if (m_scaleX < 0)
-                //{
-                //    Instantiate(m_swordx, new Vector2(tmp.x - 2, tmp.y), this.transform.rotation);
-                //}
+                GameObject clickedGameObject = null;
+               
+
+                if (m_hit2d)
+                {
+                    clickedGameObject = m_hit2d.transform.gameObject;
+                }
+
+                if (sw() )
+                {
+                    EnemyBase enemyScript = clickedGameObject?.GetComponent<EnemyBase>();
+                    enemyScript.SwordDamage();
+                }
                 m_timeElapsed = 0.0f;
             }
         }
@@ -370,6 +386,24 @@ public class Player : MonoBehaviour
     {
         bool bklay = Physics2D.Raycast(this.transform.position, Vector2.left, m_bkLength, m_kabe);
         return bklay;
+    }
+
+    bool sw()
+    {
+        if (m_scaleX > 0)
+        {
+            m_swRay = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
+            Debug.DrawRay(this.transform.position, Vector2.right * m_swLength);
+            m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
+        }
+        else if (m_scaleX < 0)
+        {
+            m_swRay = Physics2D.Raycast(this.transform.position, Vector2.left, m_swLength, m_enemy);
+            Debug.DrawRay(this.transform.position, Vector2.left * m_swLength);
+            m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength);
+        }
+        
+        return m_swRay;
     }
 
 }

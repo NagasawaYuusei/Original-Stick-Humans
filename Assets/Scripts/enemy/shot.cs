@@ -6,8 +6,8 @@ public class shot : MonoBehaviour
 {
     private GameObject playerObject;
     private Vector3 PlayerPosition;
-    public float speed = 0f;
-    public int enemyHP;
+    [SerializeField] float speed = 0f;
+    [SerializeField] int enemyHP;
 
     void Start()
     {

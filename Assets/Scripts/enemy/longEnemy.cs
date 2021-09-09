@@ -10,10 +10,10 @@ public class longEnemy : EnemyBase
     public float timeOut;
     private float timeElapsed;
 
-    public AudioClip soundbow;
-    public AudioClip destroySound;
-    public AudioClip soundbeem;
-    AudioSource audioSource;
+    //public AudioClip soundbow;
+    //public AudioClip destroySound;
+    //public AudioClip soundbeem;
+    //AudioSource audioSource;
 
     void Start()
     {
@@ -49,7 +49,7 @@ public class longEnemy : EnemyBase
             }
 
             timeElapsed = 0.0f;
-            audioSource.PlayOneShot(soundbeem);
+            //audioSource.PlayOneShot(soundbeem);
         }
     }
 
