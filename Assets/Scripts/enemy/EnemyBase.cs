@@ -11,6 +11,7 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] int m_enemyMaxHp = 0;
     int m_enemyHp = 0;
     protected SpriteRenderer m_sr;
+    [SerializeField] GameObject m_objectSlider;
     Slider m_slider;
     AudioSource audioSource;
 
@@ -30,7 +31,7 @@ public abstract class EnemyBase : MonoBehaviour
         m_srPlayer = m_playerOblect.GetComponent<SpriteRenderer>();
         m_playerPosition = m_playerOblect.transform.position;
 
-        m_slider = m_enemy.GetComponent<Slider>();
+        m_slider = m_objectSlider.GetComponent<Slider>();
         m_slider.maxValue = m_enemyMaxHp;
         m_enemyHp = m_enemyMaxHp;
         m_slider.value = m_enemyHp;

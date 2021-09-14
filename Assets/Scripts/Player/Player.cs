@@ -11,12 +11,12 @@ public class Player : MonoBehaviour
     [SerializeField] float m_bkLength = 5f;
     [SerializeField] float m_swLength = 5f;
     [SerializeField] LayerMask m_kabe = default;
-    [SerializeField] LayerMask m_enemy = default;
+    //[SerializeField] LayerMask m_enemy = default;
     [SerializeField] bool m_flipX = false;
     Rigidbody2D m_rb = default;
     SpriteRenderer m_sp = default;
     int m_jc = 0;
-    bool m_swRay = false;
+    //bool m_swRay = false;
     float m_scaleX;
     float m_timeElapsed;
     float m_timeElapsed2;
@@ -45,8 +45,8 @@ public class Player : MonoBehaviour
 
     Animator anim = null;
 
-    [SerializeField] bool m_swordRay;
-    [SerializeField] RaycastHit2D m_hit2d;
+    //[SerializeField] bool m_swordRay;
+    //[SerializeField] RaycastHit2D m_hit2d;
 
     public int Active
     {
@@ -162,10 +162,10 @@ public class Player : MonoBehaviour
             FlipX(m_h);
         }
 
-        if(m_swordRay)
-        {
-            sw();
-        }
+        //if(m_swordRay)
+        //{
+        //    sw();
+        //}
     }
     ///<summary>移動処理</summary>///
     void idou()
@@ -218,19 +218,6 @@ public class Player : MonoBehaviour
         {
             if (m_timeElapsed2 >= m_swordtime)
             {
-                GameObject clickedGameObject = null;
-               
-
-                if (m_hit2d)
-                {
-                    clickedGameObject = m_hit2d.transform.gameObject;
-                }
-
-                if (sw() )
-                {
-                    EnemyBase enemyScript = clickedGameObject?.GetComponent<EnemyBase>();
-                    enemyScript.SwordDamage();
-                }
                 m_timeElapsed = 0.0f;
             }
         }
@@ -357,11 +344,11 @@ public class Player : MonoBehaviour
 
         if (horizontal > 0)
         {
-            this.transform.localScale = new Vector2(Mathf.Abs(this.transform.localScale.x), this.transform.localScale.y);
+            this.transform.localScale = new Vector2(Mathf.Abs(m_scaleX), this.transform.localScale.y);
         }
         else if (horizontal < 0)
         {
-            this.transform.localScale = new Vector2(-1 * Mathf.Abs(this.transform.localScale.x), this.transform.localScale.y);
+            this.transform.localScale = new Vector2(-1 * Mathf.Abs(m_scaleX), this.transform.localScale.y);
         }
     }
 
@@ -388,22 +375,22 @@ public class Player : MonoBehaviour
         return bklay;
     }
 
-    bool sw()
-    {
-        if (m_scaleX > 0)
-        {
-            m_swRay = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
-            Debug.DrawRay(this.transform.position, Vector2.right * m_swLength);
-            m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
-        }
-        else if (m_scaleX < 0)
-        {
-            m_swRay = Physics2D.Raycast(this.transform.position, Vector2.left, m_swLength, m_enemy);
-            Debug.DrawRay(this.transform.position, Vector2.left * m_swLength);
-            m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength);
-        }
+    //bool sw()
+    //{
+    //    if (m_scaleX > 0)
+    //    {
+    //        m_swRay = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
+    //        Debug.DrawRay(this.transform.position, Vector2.right * m_swLength);
+    //        m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
+    //    }
+    //    else if (m_scaleX < 0)
+    //    {
+    //        m_swRay = Physics2D.Raycast(this.transform.position, Vector2.left, m_swLength, m_enemy);
+    //        Debug.DrawRay(this.transform.position, Vector2.left * m_swLength);
+    //        m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength);
+    //    }
         
-        return m_swRay;
-    }
+    //    return m_swRay;
+    //}
 
 }
