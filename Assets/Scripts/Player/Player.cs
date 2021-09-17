@@ -37,13 +37,16 @@ public class Player : MonoBehaviour
     [SerializeField] Color[] m_colors = default;
     [SerializeField] float m_toumeitime = 0f;
 
-    int s_attack = default;
-    int s_passive = default;
-    int s_active = default;
+    [SerializeField] int s_attack = default;
+    [SerializeField] int s_passive = default;
+    [SerializeField] int s_active = default;
 
     Vector2 tmp;
 
-    Animator anim = null;
+    Animator m_anim = null;
+
+    [SerializeField] float m_gravityDrag = 0.8f;
+    bool m_isGround;
 
     //[SerializeField] bool m_swordRay;
     //[SerializeField] RaycastHit2D m_hit2d;
@@ -111,7 +114,7 @@ public class Player : MonoBehaviour
         m_sp = GetComponent<SpriteRenderer>();
         m_sp.color = m_colors[0];
 
-        anim = GetComponent<Animator>();
+        m_anim = GetComponent<Animator>();
 
         m_playerhpslider = GameObject.Find("playerHPSlider").GetComponent<Slider>();
         m_playerhpslider.maxValue = m_playerhp;
@@ -157,10 +160,20 @@ public class Player : MonoBehaviour
 
         tmp = this.transform.position;//自分の位置
 
+        m_isGround = gd();
+
         if (m_flipX)//向き
         {
             FlipX(m_h);
         }
+
+        if (m_anim)
+        {
+            m_anim.SetFloat("SpeedX", Mathf.Abs(m_rb.velocity.x));
+            m_anim.SetFloat("SpeedY", m_rb.velocity.y);
+            m_anim.SetBool("IsGround", m_isGround);
+        }
+
 
         //if(m_swordRay)
         //{
@@ -178,14 +191,15 @@ public class Player : MonoBehaviour
         {
             m_rb.velocity = new Vector2(m_speed * m_h, m_rb.velocity.y);//移動
         }
-        if (0 < m_h || m_h < 0)
-        {
-            anim.Play("Player_run");
-        }
+        //if (0 < m_h || m_h < 0)
+        //{
+        //    m_anim.Play("Player_run");
+        //}
     }
     ///<summary>ジャンプ処理</summary>///
     void Jump()
     {
+        Vector2 velocity = m_rb.velocity;
         if (Input.GetButtonDown("Jump"))//ジャンプ
         {
             if (s_passive == 0)
@@ -193,7 +207,8 @@ public class Player : MonoBehaviour
                 if (gd() || m_jc <= 1)
                 {
                     m_jc++;
-                    m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);
+                    velocity.y = m_Jumpryoku;
+                    m_isGround = false;
                 }
             }
             else
@@ -201,9 +216,17 @@ public class Player : MonoBehaviour
                 if (gd())
                 {
                     m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);
+                    m_anim.Play("Player_Jump");
                 }
             }
         }
+        else if (!Input.GetButton("Jump") && m_rb.velocity.y > 0)
+        {
+            // 上昇中にジャンプボタンを離したら上昇を減速する
+            velocity.y *= m_gravityDrag;
+        }
+
+        m_rb.velocity = velocity;
 
         if (Input.GetButton("Jump") && s_passive == 1)
         {
