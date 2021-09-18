@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStates.cs" />
+    <Compile Include="Assets\Scripts\Player\SwordCollider.cs" />
     <Compile Include="Assets\Scripts\Player\bowScript.cs" />
     <Compile Include="Assets\Scripts\enemy\EnemyBase.cs" />
     <Compile Include="Assets\Scripts\enemy\bossEnemy.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Assets\Scripts\game\SceneScript.cs" />
     <Compile Include="Assets\Scripts\game\UIScript.cs" />
     <Compile Include="Assets\Scripts\game\bgm.cs" />
+    <Compile Include="Assets\SwordAttack.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.24f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

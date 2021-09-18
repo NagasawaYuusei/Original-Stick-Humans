@@ -47,6 +47,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] float m_gravityDrag = 0.8f;
     bool m_isGround;
+    [SerializeField] GameObject m_swordCollider;
+    AnimatorStateInfo stateInfo;
 
     //[SerializeField] bool m_swordRay;
     //[SerializeField] RaycastHit2D m_hit2d;
@@ -170,15 +172,8 @@ public class Player : MonoBehaviour
         if (m_anim)
         {
             m_anim.SetFloat("SpeedX", Mathf.Abs(m_rb.velocity.x));
-            m_anim.SetFloat("SpeedY", m_rb.velocity.y);
             m_anim.SetBool("IsGround", m_isGround);
         }
-
-
-        //if(m_swordRay)
-        //{
-        //    sw();
-        //}
     }
     ///<summary>移動処理</summary>///
     void idou()
@@ -191,10 +186,6 @@ public class Player : MonoBehaviour
         {
             m_rb.velocity = new Vector2(m_speed * m_h, m_rb.velocity.y);//移動
         }
-        //if (0 < m_h || m_h < 0)
-        //{
-        //    m_anim.Play("Player_run");
-        //}
     }
     ///<summary>ジャンプ処理</summary>///
     void Jump()
@@ -204,7 +195,7 @@ public class Player : MonoBehaviour
         {
             if (s_passive == 0)
             {
-                if (gd() || m_jc <= 1)
+                if (gd() || m_jc <= 0)
                 {
                     m_jc++;
                     velocity.y = m_Jumpryoku;
@@ -216,7 +207,7 @@ public class Player : MonoBehaviour
                 if (gd())
                 {
                     m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);
-                    m_anim.Play("Player_Jump");
+                    //_anim.Play("Player_Jump");
                 }
             }
         }
@@ -224,6 +215,11 @@ public class Player : MonoBehaviour
         {
             // 上昇中にジャンプボタンを離したら上昇を減速する
             velocity.y *= m_gravityDrag;
+        }
+
+        if (gd())
+        {
+            m_jc = 0;
         }
 
         m_rb.velocity = velocity;
@@ -236,13 +232,25 @@ public class Player : MonoBehaviour
     ///<summary>攻撃処理</summary>///
     void Fire1()//攻撃処理
     {
-        m_timeElapsed2 += Time.deltaTime;
-        if (Input.GetButtonDown("Fire1") && s_attack == 0)
+        stateInfo = m_anim.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName("Base Layer.Player_Sword1") || stateInfo.IsName("Base Layer.Player_Sword2") || stateInfo.IsName("Base Layer.Player_Sword3"))
         {
-            if (m_timeElapsed2 >= m_swordtime)
+            m_swordCollider.SetActive(true);
+        }
+        else
+        {
+            m_swordCollider.SetActive(false);
+        }
+        m_timeElapsed2 += Time.deltaTime;
+
+        if (s_attack == 0)
+        {
+
+            if (Input.GetButtonDown("Fire1"))
             {
-                m_timeElapsed = 0.0f;
+                m_anim.SetBool("Sword", true);
             }
+
         }
 
         if (Input.GetButtonUp("Fire1") && s_attack == 1)
@@ -380,7 +388,6 @@ public class Player : MonoBehaviour
     {
         bool jumpray = Physics2D.Raycast(this.transform.position, Vector2.down, m_settiLength);
         Debug.DrawRay(this.transform.position, Vector2.down * m_settiLength);
-        if (jumpray) m_jc = 0;
         return jumpray;
     }
 
@@ -412,7 +419,7 @@ public class Player : MonoBehaviour
     //        Debug.DrawRay(this.transform.position, Vector2.left * m_swLength);
     //        m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength);
     //    }
-        
+
     //    return m_swRay;
     //}
 
