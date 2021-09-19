@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     float m_h;//水平横
     [SerializeField] float m_speed;//スピード
     [SerializeField] int m_Jumpryoku = 15;//ジャンプ力
+    [SerializeField] float m_stepPower;
     [SerializeField] float m_settiLength = 0.5f;//ジャンプ判定の長さ
     [SerializeField] float m_bkLength = 5f;
     [SerializeField] float m_swLength = 5f;
@@ -47,6 +48,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] float m_gravityDrag = 0.8f;
     bool m_isGround;
+    bool m_isRun;
     [SerializeField] GameObject m_swordCollider;
     AnimatorStateInfo stateInfo;
 
@@ -147,6 +149,8 @@ public class Player : MonoBehaviour
 
         Fire2();
 
+        Step();
+
         Death();
     }
 
@@ -173,6 +177,16 @@ public class Player : MonoBehaviour
         {
             m_anim.SetFloat("SpeedX", Mathf.Abs(m_rb.velocity.x));
             m_anim.SetBool("IsGround", m_isGround);
+            m_anim.SetBool("Run", m_isRun);
+        }
+
+        if (m_h == 0)
+        {
+            m_isRun = false;
+        }
+        else
+        {
+            m_isRun = true;
         }
     }
     ///<summary>移動処理</summary>///
@@ -206,8 +220,7 @@ public class Player : MonoBehaviour
             {
                 if (gd())
                 {
-                    m_rb.velocity = new Vector2(m_rb.velocity.x, m_Jumpryoku);
-                    //_anim.Play("Player_Jump");
+                    velocity.y = m_Jumpryoku;
                 }
             }
         }
@@ -232,12 +245,9 @@ public class Player : MonoBehaviour
     ///<summary>攻撃処理</summary>///
     void Fire1()//攻撃処理
     {
-        if (s_attack == 0)
+        if (Input.GetButtonDown("Fire1") && s_attack == 0)
         {
-            if (Input.GetButtonDown("Fire1"))
-            {
-                m_anim.SetBool("Sword", true);
-            }
+            m_anim.SetBool("Sword", true);
         }
 
         if (Input.GetButtonUp("Fire1") && s_attack == 1)
@@ -311,6 +321,24 @@ public class Player : MonoBehaviour
         }
     }
 
+    void Step()
+    {
+        if (Input.GetButtonDown("Step"))//ジャンプ
+        {
+            //if (m_scaleX > 0)
+            //{
+                Debug.Log("←バックステップ");
+                m_rb.AddForce(Vector2.left * m_stepPower, ForceMode2D.Force);
+                //m_rb.velocity = new Vector2(m_stepPower * -1, m_rb.velocity.y);
+            //}
+            //else if (m_scaleX < 0)
+            //{
+            //    Debug.Log("バックステップ→");
+            //    //m_rb.AddForce(Vector2.right * m_stepPower, ForceMode2D.Impulse);
+            //    //m_rb.velocity = new Vector2(m_stepPower, m_rb.velocity.y);
+            //}
+        }
+    }
     ///<summary>接触判定処理</summary>///
     private void OnCollisionEnter2D(Collision2D collision)
     {
