@@ -232,25 +232,12 @@ public class Player : MonoBehaviour
     ///<summary>攻撃処理</summary>///
     void Fire1()//攻撃処理
     {
-        stateInfo = m_anim.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName("Base Layer.Player_Sword1") || stateInfo.IsName("Base Layer.Player_Sword2") || stateInfo.IsName("Base Layer.Player_Sword3"))
-        {
-            m_swordCollider.SetActive(true);
-        }
-        else
-        {
-            m_swordCollider.SetActive(false);
-        }
-        m_timeElapsed2 += Time.deltaTime;
-
         if (s_attack == 0)
         {
-
             if (Input.GetButtonDown("Fire1"))
             {
                 m_anim.SetBool("Sword", true);
             }
-
         }
 
         if (Input.GetButtonUp("Fire1") && s_attack == 1)
@@ -258,7 +245,6 @@ public class Player : MonoBehaviour
             if (m_timeElapsed2 >= m_bowtime)
             {
                 Instantiate(m_bow, m_muzzle.transform.position, this.transform.rotation);
-
                 m_timeElapsed2 = 0.0f;
             }
         }
@@ -276,7 +262,6 @@ public class Player : MonoBehaviour
                 {
                     if (bk() == false && m_scaleX > 0)
                     {
-
                         m_rb.MovePosition(new Vector2(tmp.x + 20, tmp.y));
                     }
 
@@ -404,23 +389,4 @@ public class Player : MonoBehaviour
         bool bklay = Physics2D.Raycast(this.transform.position, Vector2.left, m_bkLength, m_kabe);
         return bklay;
     }
-
-    //bool sw()
-    //{
-    //    if (m_scaleX > 0)
-    //    {
-    //        m_swRay = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
-    //        Debug.DrawRay(this.transform.position, Vector2.right * m_swLength);
-    //        m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength, m_enemy);
-    //    }
-    //    else if (m_scaleX < 0)
-    //    {
-    //        m_swRay = Physics2D.Raycast(this.transform.position, Vector2.left, m_swLength, m_enemy);
-    //        Debug.DrawRay(this.transform.position, Vector2.left * m_swLength);
-    //        m_hit2d = Physics2D.Raycast(this.transform.position, Vector2.right, m_swLength);
-    //    }
-
-    //    return m_swRay;
-    //}
-
 }
