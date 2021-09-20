@@ -15,10 +15,9 @@ public class Player : MonoBehaviour
     Rigidbody2D m_rb = default;
     SpriteRenderer m_sp = default;
     int m_jc = 0;
-    //bool m_swRay = false;
     float m_scaleX;
-    float m_timeElapsed;
-    float m_timeElapsed2;
+    float m_skillTime;
+    float m_attackTime;
     float m_nowStepTime;
     [SerializeField] float m_stepTime;
     [SerializeField] int m_bktime;
@@ -51,9 +50,6 @@ public class Player : MonoBehaviour
     bool m_isRun;
     bool m_isStep;
     [SerializeField] GameObject m_swordCollider;
-
-    //[SerializeField] bool m_swordRay;
-    //[SerializeField] RaycastHit2D m_hit2d;
 
     public int Active
     {
@@ -106,7 +102,7 @@ public class Player : MonoBehaviour
     {
         get
         {
-            return m_timeElapsed;
+            return m_skillTime;
         }
     }
 
@@ -133,8 +129,7 @@ public class Player : MonoBehaviour
             m_playerhp = m_playerhp * 2;
         }
 
-        m_timeElapsed = 50;
-        m_timeElapsed2 = 50;
+        m_skillTime = 50;
         m_nowStepTime = m_stepTime;
 
         Debug.Log(s_attack + "," + s_passive + "," + s_active);
@@ -247,28 +242,49 @@ public class Player : MonoBehaviour
     ///<summary>攻撃処理</summary>///
     void Fire1()//攻撃処理
     {
-        if (Input.GetButtonDown("Fire1") && s_attack == 0)
+        if(s_attack == 0)
+        {
+            Sword();
+        }
+        else if(s_attack == 1)
+        {
+            Bow();
+        }
+    }
+
+    void Sword()
+    {
+        if (Input.GetButtonDown("Fire1"))
         {
             m_anim.SetBool("Sword", true);
         }
+    }
 
-        if (Input.GetButtonUp("Fire1") && s_attack == 1)
+    void Bow()
+    {
+        bool IsBow = false;
+        if (Input.GetButtonDown("Fire1"))
         {
-            if (m_timeElapsed2 >= m_bowtime)
-            {
-                Instantiate(m_bow, m_muzzle.transform.position, this.transform.rotation);
-                m_timeElapsed2 = 0.0f;
-            }
+            IsBow = true;
+        }
+        if (Input.GetButtonUp("Fire2"))
+        {
+            IsBow = false;
+        }
+
+        if(IsBow)
+        {
+            m_attackTime = Time.deltaTime;
         }
     }
 
     ///<summary>アクティブスキル処理</summary>///
     void Fire2()
     {
-        m_timeElapsed += Time.deltaTime;
+        m_skillTime += Time.deltaTime;
         if (Input.GetButtonDown("Fire2"))
         {
-            if (m_timeElapsed >= m_bktime)
+            if (m_skillTime >= m_bktime)
             {
                 if (s_active == 0)
                 {
@@ -281,11 +297,11 @@ public class Player : MonoBehaviour
                     {
                         m_rb.MovePosition(new Vector2(tmp.x + -20, tmp.y));
                     }
-                    m_timeElapsed = 0.0f;
+                    m_skillTime = 0.0f;
                 }
             }
 
-            if (m_timeElapsed >= m_walltime)
+            if (m_skillTime >= m_walltime)
             {
                 if (s_active == 1)
                 {
@@ -298,27 +314,27 @@ public class Player : MonoBehaviour
                     {
                         Instantiate(m_wall, new Vector2(tmp.x - 10, tmp.y - 10), this.transform.rotation);
                     }
-                    m_timeElapsed = 0.0f;
+                    m_skillTime = 0.0f;
                 }
             }
 
-            if (m_timeElapsed >= m_healtime)
+            if (m_skillTime >= m_healtime)
             {
                 if (s_active == 2)
                 {
                     m_playerhp += 3;
-                    m_timeElapsed = 0.0f;
+                    m_skillTime = 0.0f;
                 }
             }
 
-            if (m_timeElapsed >= m_stelthtime)
+            if (m_skillTime >= m_stelthtime)
             {
                 if (s_active == 3)
                 {
                     m_sp.color = m_colors[1];
                     Invoke("backcolor", m_toumeitime);
                 }
-                m_timeElapsed = 0.0f;
+                m_skillTime = 0.0f;
             }
         }
     }

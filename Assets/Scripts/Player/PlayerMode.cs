@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerMode : MonoBehaviour
 {
 
-    [SerializeField]GameObject ChangeButton;
+    [SerializeField] GameObject ChangeButton;
     int m_attackmode = 0;
     int m_passivemode = 0;
     int m_activemode = 0;
@@ -59,7 +59,7 @@ public class PlayerMode : MonoBehaviour
             m_passivemode = 1;
             ChangeButton.GetComponentInChildren<Text>().text = "Flow";
         }
-        else if(m_passivemode == 1)
+        else if (m_passivemode == 1)
         {
             m_passivemode = 2;
             ChangeButton.GetComponentInChildren<Text>().text = "Health";
@@ -93,7 +93,37 @@ public class PlayerMode : MonoBehaviour
             m_activemode = 3;
             ChangeButton.GetComponentInChildren<Text>().text = "Stealth";
         }
-        else
+        //else if (m_activemode == 3)
+        //{
+        //    if(m_attackmode == 0)
+        //    {
+        //        m_activemode = 4;
+        //        ChangeButton.GetComponentInChildren<Text>().text = "Beam";
+        //    }
+        //    else if(m_attackmode == 1)
+        //    {
+        //        m_activemode = 5;
+        //        ChangeButton.GetComponentInChildren<Text>().text = "Kick";
+        //    }
+        //}
+        else if (m_activemode == 3)
+        {
+            if (m_attackmode == 0)
+            {
+                m_activemode = 4;
+                ChangeButton.GetComponentInChildren<Text>().text = "Beam";
+            }
+        }
+        else if (m_activemode == 3)
+        {
+            if (m_attackmode == 1)
+            {
+                m_activemode = 5;
+                ChangeButton.GetComponentInChildren<Text>().text = "Kick";
+            }
+        }
+
+        else if (m_activemode == 4 || m_activemode == 5)
         {
             m_activemode = 0;
             ChangeButton.GetComponentInChildren<Text>().text = "Blink";
