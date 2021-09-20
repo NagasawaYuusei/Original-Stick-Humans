@@ -10,9 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] float m_stepPower;
     [SerializeField] float m_settiLength = 0.5f;//ジャンプ判定の長さ
     [SerializeField] float m_bkLength = 5f;
-    [SerializeField] float m_swLength = 5f;
     [SerializeField] LayerMask m_kabe = default;
-    //[SerializeField] LayerMask m_enemy = default;
     [SerializeField] bool m_flipX = false;
     Rigidbody2D m_rb = default;
     SpriteRenderer m_sp = default;
@@ -21,6 +19,8 @@ public class Player : MonoBehaviour
     float m_scaleX;
     float m_timeElapsed;
     float m_timeElapsed2;
+    float m_nowStepTime;
+    [SerializeField] float m_stepTime;
     [SerializeField] int m_bktime;
     [SerializeField] int m_walltime;
     [SerializeField] int m_healtime;
@@ -49,8 +49,8 @@ public class Player : MonoBehaviour
     [SerializeField] float m_gravityDrag = 0.8f;
     bool m_isGround;
     bool m_isRun;
+    bool m_isStep;
     [SerializeField] GameObject m_swordCollider;
-    AnimatorStateInfo stateInfo;
 
     //[SerializeField] bool m_swordRay;
     //[SerializeField] RaycastHit2D m_hit2d;
@@ -135,6 +135,7 @@ public class Player : MonoBehaviour
 
         m_timeElapsed = 50;
         m_timeElapsed2 = 50;
+        m_nowStepTime = m_stepTime;
 
         Debug.Log(s_attack + "," + s_passive + "," + s_active);
     }
@@ -178,6 +179,7 @@ public class Player : MonoBehaviour
             m_anim.SetFloat("SpeedX", Mathf.Abs(m_rb.velocity.x));
             m_anim.SetBool("IsGround", m_isGround);
             m_anim.SetBool("Run", m_isRun);
+            m_anim.SetBool("Step", m_isStep);
         }
 
         if (m_h == 0)
@@ -323,20 +325,25 @@ public class Player : MonoBehaviour
 
     void Step()
     {
-        if (Input.GetButtonDown("Step"))//ジャンプ
+        m_nowStepTime += Time.deltaTime;
+        if (Input.GetButtonDown("Step") && m_nowStepTime > m_stepTime)
         {
-            //if (m_scaleX > 0)
-            //{
-                Debug.Log("←バックステップ");
+            if (m_scaleX > 0)
+            {
                 m_rb.AddForce(Vector2.left * m_stepPower, ForceMode2D.Force);
-                //m_rb.velocity = new Vector2(m_stepPower * -1, m_rb.velocity.y);
-            //}
-            //else if (m_scaleX < 0)
-            //{
-            //    Debug.Log("バックステップ→");
-            //    //m_rb.AddForce(Vector2.right * m_stepPower, ForceMode2D.Impulse);
-            //    //m_rb.velocity = new Vector2(m_stepPower, m_rb.velocity.y);
-            //}
+                m_isStep = true;
+                m_nowStepTime = 0;
+            }
+            else if (m_scaleX < 0)
+            {
+                m_rb.AddForce(Vector2.right * m_stepPower, ForceMode2D.Force);
+                m_isStep = true;
+                m_nowStepTime = 0;
+            }
+        }
+        else
+        {
+            m_isStep = false;
         }
     }
     ///<summary>接触判定処理</summary>///
