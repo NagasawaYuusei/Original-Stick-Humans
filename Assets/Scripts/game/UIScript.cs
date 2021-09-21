@@ -111,13 +111,13 @@ public class UIScript : MonoBehaviour
 
             if (pauseUI.activeSelf)
             {
-                Time.timeScale = 0f;
+                //Pauser.Pause(); ;
                 button = GameObject.Find("Create").GetComponent<Button>();
                 button.Select();
             }
             else
             {
-                Time.timeScale = 1f;
+                //Pauser.Resume();
             }
 
 

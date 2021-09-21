@@ -8,6 +8,8 @@ TagManager:
   - Sword
   - Attack
   - enemy
+  - Heal
+  - Change
   layers:
   - Default
   - TransparentFX

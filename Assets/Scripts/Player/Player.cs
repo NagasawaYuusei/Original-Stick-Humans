@@ -24,11 +24,14 @@ public class Player : MonoBehaviour
     [SerializeField] int m_walltime;
     [SerializeField] int m_healtime;
     [SerializeField] int m_stelthtime;
+    [SerializeField] int m_beamTime;
+    [SerializeField] int m_kickTime;
     [SerializeField] float m_bowtime;
     [SerializeField] float m_swordtime;
     [SerializeField] GameObject m_muzzle = default;
 
     [SerializeField] int m_playerhp = 1;
+    int m_maxPlayerHp;
     [SerializeField] Slider m_playerhpslider;
 
     [SerializeField] GameObject m_bow = default;
@@ -50,6 +53,10 @@ public class Player : MonoBehaviour
     bool m_isRun;
     bool m_isStep;
     [SerializeField] GameObject m_swordCollider;
+    [SerializeField] int m_heal;
+    bool m_isChange = true;
+    [SerializeField] private GameObject m_modeUI = default;
+    Button m_modeButton;
 
     public int Active
     {
@@ -118,6 +125,7 @@ public class Player : MonoBehaviour
 
         m_playerhpslider = GameObject.Find("playerHPSlider").GetComponent<Slider>();
         m_playerhpslider.maxValue = m_playerhp;
+        m_maxPlayerHp = m_playerhp;
         m_playerhpslider.value = m_playerhp;
 
         s_attack = PlayerStates.AttackStates;
@@ -185,6 +193,8 @@ public class Player : MonoBehaviour
         {
             m_isRun = true;
         }
+        
+        Debug.Log(m_isChange);
     }
     ///<summary>移動処理</summary>///
     void idou()
@@ -282,22 +292,13 @@ public class Player : MonoBehaviour
     void Fire2()
     {
         m_skillTime += Time.deltaTime;
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire2") && m_isChange == true)
         {
             if (m_skillTime >= m_bktime)
             {
                 if (s_active == 0)
                 {
-                    if (bk() == false && m_scaleX > 0)
-                    {
-                        m_rb.MovePosition(new Vector2(tmp.x + 20, tmp.y));
-                    }
-
-                    if (bk2() == false && m_scaleX < 0)
-                    {
-                        m_rb.MovePosition(new Vector2(tmp.x + -20, tmp.y));
-                    }
-                    m_skillTime = 0.0f;
+                    Blink();
                 }
             }
 
@@ -305,16 +306,7 @@ public class Player : MonoBehaviour
             {
                 if (s_active == 1)
                 {
-                    if (m_scaleX > 0 && gd())
-                    {
-                        Instantiate(m_wall, new Vector2(tmp.x + 10, tmp.y - 10), this.transform.rotation);
-                    }
-
-                    if (m_scaleX < 0 && gd())
-                    {
-                        Instantiate(m_wall, new Vector2(tmp.x - 10, tmp.y - 10), this.transform.rotation);
-                    }
-                    m_skillTime = 0.0f;
+                    Wall();
                 }
             }
 
@@ -322,8 +314,7 @@ public class Player : MonoBehaviour
             {
                 if (s_active == 2)
                 {
-                    m_playerhp += 3;
-                    m_skillTime = 0.0f;
+                    Heal();
                 }
             }
 
@@ -331,12 +322,77 @@ public class Player : MonoBehaviour
             {
                 if (s_active == 3)
                 {
-                    m_sp.color = m_colors[1];
-                    Invoke("backcolor", m_toumeitime);
+                    Stelth();
                 }
-                m_skillTime = 0.0f;
+            }
+
+            if (m_skillTime >= m_beamTime)
+            {
+                if (s_active == 4)
+                {
+                    Beam();
+                }
+            }
+
+            if (m_skillTime >= m_kickTime)
+            {
+                if (s_active == 5)
+                {
+                    Kick();
+                }
             }
         }
+    }
+
+    void Blink()
+    {
+        if (bk() == false && m_scaleX > 0)
+        {
+            m_rb.MovePosition(new Vector2(tmp.x + 20, tmp.y));
+        }
+
+        if (bk2() == false && m_scaleX < 0)
+        {
+            m_rb.MovePosition(new Vector2(tmp.x + -20, tmp.y));
+        }
+        m_skillTime = 0.0f;
+    }
+
+    void Wall()
+    {
+        if (m_scaleX > 0 && gd())
+        {
+            Instantiate(m_wall, new Vector2(tmp.x + 10, tmp.y - 10), this.transform.rotation);
+        }
+
+        if (m_scaleX < 0 && gd())
+        {
+            Instantiate(m_wall, new Vector2(tmp.x - 10, tmp.y - 10), this.transform.rotation);
+        }
+        m_skillTime = 0.0f;
+    }
+
+    void Heal()
+    {
+        m_playerhp += 3;
+        m_skillTime = 0.0f;
+    }
+
+    void Stelth()
+    {
+        m_sp.color = m_colors[1];
+        Invoke("backcolor", m_toumeitime);
+        m_skillTime = 0.0f;
+    }
+
+    void Beam()
+    {
+
+    }
+
+    void Kick()
+    {
+
     }
 
     void Step()
@@ -380,6 +436,59 @@ public class Player : MonoBehaviour
                 Invoke("Gameover", 1.5f);
                 this.gameObject.SetActive(false);
             }
+        }
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Heal(collision);
+        Change(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Changed(collision);
+    }
+
+    void Change(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Change"))
+        {
+            m_isChange = false;
+            if(Input.GetButtonDown("Fire2") && m_isChange == false)
+            {
+                if (m_modeUI.activeSelf)
+                {
+                    //Pauser.Pause();
+                    m_modeButton = GameObject.Find("Atack Mode").GetComponent<Button>();
+                    m_modeButton.Select();
+                }
+                else
+                {
+                    //Pauser.Resume();
+                }
+            }
+        }
+    }
+    void Heal(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Heal"))
+        {
+            m_playerhp += m_heal;
+            if (m_playerhp > m_maxPlayerHp)
+            {
+                m_playerhp = m_maxPlayerHp;
+            }
+            m_playerhpslider.value = m_playerhp;
+            Destroy(collision.gameObject);
+        }
+    }
+    private void Changed(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Change"))
+        {
+            m_isChange = true;
         }
     }
 
