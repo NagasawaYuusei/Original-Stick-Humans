@@ -190,7 +190,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Blink
+  m_Text: Beam
 --- !u!222 &69948584
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -564,6 +564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChangeButton: {fileID: 658645930}
+  ChangeButton2: {fileID: 0}
 --- !u!1 &816937857
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,6 +1017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChangeButton: {fileID: 1178562881}
+  ChangeButton2: {fileID: 0}
 --- !u!1 &1180926061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,6 +1468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChangeButton: {fileID: 1621618958}
+  ChangeButton2: {fileID: 658645930}
 --- !u!1001 &2092255925
 PrefabInstance:
   m_ObjectHideFlags: 0
