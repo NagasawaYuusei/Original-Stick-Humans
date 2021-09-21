@@ -39,7 +39,6 @@ public class PlayerStates : MonoBehaviour
         {
             return m_active;
         }
-
     }
     void Start()
     {
@@ -58,7 +57,12 @@ public class PlayerStates : MonoBehaviour
         m_attack = m_attackscript.Attackmode;
         m_passive = m_passivescript.Passivemode;
         m_active = m_activescript.Activemode;
-        //Debug.Log("Attackmode"+ m_attack+ ",passivemode"+m_passive+ ",activemode"+m_active) ;
+        if (m_activescript.Activemode == 4 || m_activescript.Activemode == 5)
+        {
+            m_active = m_attackscript.Activemode;
+        }
+
+        Debug.Log("Attackmode"+ m_attack+ ",passivemode"+m_passive+ ",activemode"+m_active) ;
     }
 
 }
