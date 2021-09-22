@@ -19,7 +19,7 @@ public class zimenEnemy : EnemyBase
 
     void Update()
     {
-        if (m_sr.isVisible && m_srPlayer.color == m_player.Colors[0] || m_sr.isVisible && m_srPlayer.color == m_player.Colors[2])
+        if (m_sr.isVisible && !Player.IsStelth)
         {
             StartCoroutine(Enemy());
         }

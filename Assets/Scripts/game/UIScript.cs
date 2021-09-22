@@ -34,9 +34,6 @@ public class UIScript : MonoBehaviour
         playerstate = m_Player.GetComponent<Player>();
 
         o_active = playerstate.Active;
-
-       
-
     }
 
     // Update is called once per frame
@@ -62,7 +59,7 @@ public class UIScript : MonoBehaviour
 
             if (n_timeElapsed < n_bk)
             {
-                m_text.text = "CT "+o_bk;
+                m_text.text = "CT "+o_bk.ToString("n2");
             }
         }
 
@@ -75,7 +72,7 @@ public class UIScript : MonoBehaviour
 
             if (n_timeElapsed < n_wall)
             {
-                m_text.text = "CT " + o_wall;
+                m_text.text = "CT " + o_wall.ToString("n2");
             }
         }
 
@@ -88,7 +85,7 @@ public class UIScript : MonoBehaviour
 
             if (n_timeElapsed < n_heal)
             {
-                m_text.text = "CT  " + o_heal;
+                m_text.text = "CT  " + o_heal.ToString("n2");
             }
         }
 
@@ -101,7 +98,14 @@ public class UIScript : MonoBehaviour
 
             if (n_timeElapsed < n_stelth)
             {
-                m_text.text = "CT  " + o_stelth;
+                if(Player.IsStelth)
+                {
+                    m_text.text = "StelthTime　" + (playerstate.MaxToumeiTime - Player.ToumeiTime).ToString("n2");
+                }
+                else
+                {
+                    m_text.text = "CT  " + o_stelth.ToString("n2");
+                }
             }
         }
 

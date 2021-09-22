@@ -49,7 +49,7 @@ public abstract class EnemyBase : MonoBehaviour
 
             if (m_enemyHp <= 0)
             {
-                Destroy(transform.root.gameObject);
+                Destroy(gameObject);
             }
         }
             
@@ -61,7 +61,7 @@ public abstract class EnemyBase : MonoBehaviour
 
             if (m_enemyHp <= 0)
             {
-                Destroy(transform.root.gameObject);
+                Destroy(gameObject);
             }
         }
     }

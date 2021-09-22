@@ -37,9 +37,10 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject m_bow = default;
 
     [SerializeField] GameObject m_wall = default;
+    [SerializeField] GameObject m_hed = default;
     [SerializeField] Color[] m_colors = default;
-    [SerializeField] float m_toumeitime = 0f;
-
+    static float m_toumeitime = 0f;
+    [SerializeField] float m_maxToumeiTime;
     [SerializeField] int s_attack = default;
     [SerializeField] int s_passive = default;
     [SerializeField] int s_active = default;
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour
     bool m_isChange = true;
     [SerializeField] private GameObject m_modeUI = default;
     Button m_modeButton;
+    static bool m_isStelth = false;
 
     public int Active
     {
@@ -113,12 +115,36 @@ public class Player : MonoBehaviour
         }
     }
 
+    public static bool IsStelth
+    {
+        get
+        {
+            return m_isStelth;
+        }
+
+    }
+
+    public float MaxToumeiTime
+    {
+        get
+        {
+            return m_maxToumeiTime;
+        }
+    }
+
+    public static float ToumeiTime
+    {
+        get
+        {
+            return m_toumeitime;
+        }
+    }
 
     void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
 
-        m_sp = GetComponent<SpriteRenderer>();
+        m_sp = m_hed.GetComponent<SpriteRenderer>();
         m_sp.color = m_colors[0];
 
         m_anim = GetComponent<Animator>();
@@ -177,6 +203,18 @@ public class Player : MonoBehaviour
             FlipX(m_h);
         }
 
+        if (m_isStelth)
+        {
+            m_toumeitime += Time.deltaTime;
+            m_sp.color = m_colors[1];
+            if (m_maxToumeiTime < m_toumeitime)
+            {
+                m_toumeitime = 0;
+                m_sp.color = m_colors[0];
+                m_isStelth = false;
+            }
+        }
+
         if (m_anim)
         {
             m_anim.SetFloat("SpeedX", Mathf.Abs(m_rb.velocity.x));
@@ -193,7 +231,7 @@ public class Player : MonoBehaviour
         {
             m_isRun = true;
         }
-        
+
         Debug.Log(m_isChange);
     }
     ///<summary>移動処理</summary>///
@@ -252,11 +290,11 @@ public class Player : MonoBehaviour
     ///<summary>攻撃処理</summary>///
     void Fire1()//攻撃処理
     {
-        if(s_attack == 0)
+        if (s_attack == 0)
         {
             Sword();
         }
-        else if(s_attack == 1)
+        else if (s_attack == 1)
         {
             Bow();
         }
@@ -282,7 +320,7 @@ public class Player : MonoBehaviour
             IsBow = false;
         }
 
-        if(IsBow)
+        if (IsBow)
         {
             m_attackTime = Time.deltaTime;
         }
@@ -299,6 +337,7 @@ public class Player : MonoBehaviour
                 if (s_active == 0)
                 {
                     Blink();
+                    m_anim.SetBool("Blink", true);
                 }
             }
 
@@ -307,6 +346,7 @@ public class Player : MonoBehaviour
                 if (s_active == 1)
                 {
                     Wall();
+                    m_anim.SetBool("Wall", true);
                 }
             }
 
@@ -315,6 +355,7 @@ public class Player : MonoBehaviour
                 if (s_active == 2)
                 {
                     Heal();
+                    m_anim.SetBool("Heal", true);
                 }
             }
 
@@ -323,6 +364,7 @@ public class Player : MonoBehaviour
                 if (s_active == 3)
                 {
                     Stelth();
+                    m_anim.SetBool("Stelth", true);
                 }
             }
 
@@ -362,12 +404,14 @@ public class Player : MonoBehaviour
     {
         if (m_scaleX > 0 && gd())
         {
-            Instantiate(m_wall, new Vector2(tmp.x + 10, tmp.y - 10), this.transform.rotation);
+            var parent = GameObject.Find("---GameObject---").transform;
+            Instantiate(m_wall, new Vector2(tmp.x + 30, tmp.y), this.transform.rotation, parent);
         }
 
         if (m_scaleX < 0 && gd())
         {
-            Instantiate(m_wall, new Vector2(tmp.x - 10, tmp.y - 10), this.transform.rotation);
+            var parent = GameObject.Find("---GameObject---").transform;
+            Instantiate(m_wall, new Vector2(tmp.x - 30, tmp.y), this.transform.rotation, parent);
         }
         m_skillTime = 0.0f;
     }
@@ -375,13 +419,17 @@ public class Player : MonoBehaviour
     void Heal()
     {
         m_playerhp += 3;
+        if (m_playerhp > m_maxPlayerHp)
+        {
+            m_playerhp = m_maxPlayerHp;
+        }
+        m_playerhpslider.value = m_playerhp;
         m_skillTime = 0.0f;
     }
 
     void Stelth()
     {
-        m_sp.color = m_colors[1];
-        Invoke("backcolor", m_toumeitime);
+        m_isStelth = true;
         m_skillTime = 0.0f;
     }
 
@@ -437,7 +485,7 @@ public class Player : MonoBehaviour
                 this.gameObject.SetActive(false);
             }
         }
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -456,7 +504,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Change"))
         {
             m_isChange = false;
-            if(Input.GetButtonDown("Fire2") && m_isChange == false)
+            if (Input.GetButtonDown("Fire2") && m_isChange == false)
             {
                 if (m_modeUI.activeSelf)
                 {
