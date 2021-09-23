@@ -41,28 +41,39 @@ public abstract class EnemyBase : MonoBehaviour
 
     public virtual void Damage(Collider2D collision)
     {
-
         if (collision.gameObject.CompareTag("Sword"))
         {
-            m_enemyHp -= 1;
-            m_slider.value = m_enemyHp;
-
-            if (m_enemyHp <= 0)
-            {
-                Destroy(gameObject);
-            }
+            Attack(3);
         }
-            
 
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Sword2"))
         {
-            m_enemyHp -= 2;
-            m_slider.value = m_enemyHp;
+            Attack(5);
+        }
 
-            if (m_enemyHp <= 0)
-            {
-                Destroy(gameObject);
-            }
+        if (collision.gameObject.CompareTag("Sword3"))
+        {
+            Attack(7);
+        }
+
+        if (collision.gameObject.CompareTag("Bow"))
+        {
+            Attack(5);
+        }
+
+        if (collision.gameObject.CompareTag("Bow2"))
+        {
+            Attack(7);
+        }
+
+        if (collision.gameObject.CompareTag("Bow3"))
+        {
+            Attack(10);
+        }
+
+        if (collision.gameObject.CompareTag("Abi"))
+        {
+            Attack(5);
         }
     }
 
@@ -91,6 +102,17 @@ public abstract class EnemyBase : MonoBehaviour
                 this.gameObject.SetActive(false);
                 StartCoroutine(Gameclear());
             }
+        }
+    }
+
+    void Attack(int damage)
+    {
+        m_enemyHp -= damage;
+        m_slider.value = m_enemyHp;
+
+        if (m_enemyHp <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 

@@ -401,7 +401,7 @@ Transform:
   m_GameObject: {fileID: 9095246147741227185}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 37.417233, y: 4.8214684, z: -3}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 3708573892089908740}
   m_Father: {fileID: 0}
@@ -516,14 +516,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 156a400c96cbdda4596b98c8daa7cba7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 1.5
-  timeOut: 3
+  m_enemy: {fileID: 0}
+  m_enemyMaxHp: 0
+  m_objectSlider: {fileID: 0}
+  m_sound: {fileID: 0}
+  m_time: 0
   m_shot: {fileID: 2647469869824184920, guid: b459e04307330974c986f60990517932, type: 3}
-  enemyHP: 4
-  enemynum: 0
-  soundbow: {fileID: 8300000, guid: 41e37f591c5d1f743883489db9d983d6, type: 3}
-  destroySound: {fileID: 8300000, guid: 2dfa7070e93edd942bff9099170db7c4, type: 3}
-  soundbeem: {fileID: 8300000, guid: fb053b789a40ce6468423c80b87a8558, type: 3}
+  timeOut: 3
 --- !u!82 &-3259038246579240428
 AudioSource:
   m_ObjectHideFlags: 0

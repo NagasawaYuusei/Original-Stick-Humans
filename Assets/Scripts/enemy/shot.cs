@@ -31,7 +31,7 @@ public class shot : MonoBehaviour
 
             if (enemyHP == 0)
             {
-                Destroy(transform.root.gameObject);
+                Destroy(gameObject);
 
                 // AudioSource.PlayClipAtPoint(destroySound, transform.position);
             }
@@ -48,7 +48,7 @@ public class shot : MonoBehaviour
 
             if (enemyHP <= 0)
             {
-                Destroy(transform.root.gameObject);
+                Destroy(gameObject);
 
                 // AudioSource.PlayClipAtPoint(destroySound, transform.position);
             }

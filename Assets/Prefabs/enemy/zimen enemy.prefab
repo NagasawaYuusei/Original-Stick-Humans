@@ -239,7 +239,7 @@ Transform:
   m_GameObject: {fileID: 7918347054136680301}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 44.4, y: -0.4, z: -3}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 7918347053303513270}
   m_Father: {fileID: 0}
@@ -354,11 +354,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e5d9e501f50777449b4c9dd8d6052c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_enemy: {fileID: 0}
-  m_enemyMaxHp: 0
+  m_enemy: {fileID: 7918347054136680301}
+  m_enemyMaxHp: 10
+  m_objectSlider: {fileID: 7918347054349653930}
   m_sound: {fileID: 0}
-  m_speed: 0
-  m_time: 0
+  m_speed: 0.1
+  m_time: 1.5
 --- !u!82 &-5681246138875260899
 AudioSource:
   m_ObjectHideFlags: 0

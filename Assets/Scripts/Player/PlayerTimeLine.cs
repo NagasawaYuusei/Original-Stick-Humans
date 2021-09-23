@@ -2,15 +2,14 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class PlayerTimeLine : MonoBehaviour
 {
     float m_h;//水平横
     [SerializeField] float m_speed;//スピード
     [SerializeField] int m_Jumpryoku = 15;//ジャンプ力
     [SerializeField] float m_stepPower;
     [SerializeField] float m_settiLength = 0.5f;//ジャンプ判定の長さ
-    [SerializeField] float m_bkLength;
-    [SerializeField] float m_isBkLength = 5f;
+    [SerializeField] float m_bkLength = 5f;
     [SerializeField] LayerMask m_kabe = default;
     [SerializeField] bool m_flipX = false;
     Rigidbody2D m_rb = default;
@@ -19,8 +18,6 @@ public class Player : MonoBehaviour
     float m_scaleX;
     float m_skillTime;
     float m_attackTime;
-    [SerializeField] float m_secondBowTime;
-    [SerializeField] float m_thirdBowTime;
     float m_nowStepTime;
     [SerializeField] float m_stepTime;
     [SerializeField] int m_bktime;
@@ -30,6 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] int m_beamTime;
     [SerializeField] int m_kickTime;
     [SerializeField] float m_bowtime;
+    [SerializeField] float m_swordtime;
     [SerializeField] GameObject m_muzzle = default;
 
     [SerializeField] int m_playerhp = 1;
@@ -61,7 +59,6 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject m_modeUI = default;
     Button m_modeButton;
     static bool m_isStelth = false;
-    float m_bowNowTime;
 
     public int Active
     {
@@ -143,22 +140,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    public float BMTime
-    {
-        get
-        {
-            return m_beamTime;
-        }
-    }
-
-    public float KCTime
-    {
-        get
-        {
-            return m_kickTime;
-        }
-    }
-
     void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
@@ -225,11 +206,11 @@ public class Player : MonoBehaviour
         if (m_isStelth)
         {
             m_toumeitime += Time.deltaTime;
-           // m_sp.color = m_colors[1];
+            m_sp.color = m_colors[1];
             if (m_maxToumeiTime < m_toumeitime)
             {
                 m_toumeitime = 0;
-                //m_sp.color = m_colors[0];
+                m_sp.color = m_colors[0];
                 m_isStelth = false;
             }
         }
@@ -251,7 +232,7 @@ public class Player : MonoBehaviour
             m_isRun = true;
         }
 
-        Debug.Log(m_attackTime);
+        Debug.Log(m_isChange);
     }
     ///<summary>移動処理</summary>///
     void idou()
@@ -329,61 +310,19 @@ public class Player : MonoBehaviour
 
     void Bow()
     {
-        m_bowNowTime = Time.deltaTime;
-
-        if (Input.GetButton("Fire1") || m_bowNowTime > m_bowtime)
+        bool IsBow = false;
+        if (Input.GetButtonDown("Fire1"))
         {
-            m_attackTime += Time.deltaTime;
+            IsBow = true;
         }
-        if (Input.GetButtonUp("Fire1"))
+        if (Input.GetButtonUp("Fire2"))
         {
-            if(0 < m_attackTime && m_attackTime < m_secondBowTime)
-            {
-                if (m_scaleX > 0)
-                {
-                    var parent = GameObject.Find("---GameObject---").transform;
-                    GameObject clone = Instantiate(m_bow, new Vector2(tmp.x + 10, tmp.y), this.transform.rotation, parent);
-                    clone.tag = "Bow";
-                }
-                if (m_scaleX < 0)
-                {
-                    var parent = GameObject.Find("---GameObject---").transform;
-                    GameObject clone = Instantiate(m_bow, new Vector2(tmp.x - 10, tmp.y), this.transform.rotation, parent);
-                    clone.tag = "Bow";
-                }
-            }
-            else if(m_secondBowTime <= m_attackTime && m_attackTime < m_thirdBowTime)
-            {
-                if (m_scaleX > 0)
-                {
-                    var parent = GameObject.Find("---GameObject---").transform;
-                    GameObject clone = Instantiate(m_bow, new Vector2(tmp.x + 10, tmp.y), this.transform.rotation, parent);
-                    clone.tag = "Bow2";
-                }
-                if (m_scaleX < 0)
-                {
-                    var parent = GameObject.Find("---GameObject---").transform;
-                    GameObject clone = Instantiate(m_bow, new Vector2(tmp.x - 10, tmp.y), this.transform.rotation, parent);
-                    clone.tag = "Bow2";
-                }
-            }
-            else if(m_thirdBowTime <= m_attackTime)
-            {
-                if (m_scaleX > 0)
-                {
-                    var parent = GameObject.Find("---GameObject---").transform;
-                    GameObject clone = Instantiate(m_bow, new Vector2(tmp.x + 10, tmp.y), this.transform.rotation, parent);
-                    clone.tag = "Bow3";
-                }
-                if (m_scaleX < 0)
-                {
-                    var parent = GameObject.Find("---GameObject---").transform;
-                    GameObject clone = Instantiate(m_bow, new Vector2(tmp.x - 10, tmp.y), this.transform.rotation, parent);
-                    clone.tag = "Bow3";
-                }
-            }
-            m_attackTime = 0;
-            m_bowNowTime = 0;
+            IsBow = false;
+        }
+
+        if (IsBow)
+        {
+            m_attackTime = Time.deltaTime;
         }
     }
 
@@ -434,7 +373,6 @@ public class Player : MonoBehaviour
                 if (s_active == 4)
                 {
                     Beam();
-                    m_anim.SetBool("Beam", true);
                 }
             }
 
@@ -443,7 +381,6 @@ public class Player : MonoBehaviour
                 if (s_active == 5)
                 {
                     Kick();
-                    m_anim.SetBool("Kick", true);
                 }
             }
         }
@@ -453,12 +390,12 @@ public class Player : MonoBehaviour
     {
         if (bk() == false && m_scaleX > 0)
         {
-            m_rb.MovePosition(new Vector2(tmp.x + m_bkLength, tmp.y));
+            m_rb.MovePosition(new Vector2(tmp.x + 20, tmp.y));
         }
 
         if (bk2() == false && m_scaleX < 0)
         {
-            m_rb.MovePosition(new Vector2(tmp.x - m_bkLength, tmp.y));
+            m_rb.MovePosition(new Vector2(tmp.x + -20, tmp.y));
         }
         m_skillTime = 0.0f;
     }
@@ -650,14 +587,15 @@ public class Player : MonoBehaviour
     ///<summary>ブリンク判定</summary>///
     bool bk()
     {
-        bool bklay = Physics2D.Raycast(this.transform.position, Vector2.right, m_isBkLength, m_kabe);
+        bool bklay = Physics2D.Raycast(this.transform.position, Vector2.right, m_bkLength, m_kabe);
         return bklay;
     }
 
     ///<summary>ブリンク後ろ判定</summary>///
     bool bk2()
     {
-        bool bklay = Physics2D.Raycast(this.transform.position, Vector2.left, m_isBkLength, m_kabe);
+        bool bklay = Physics2D.Raycast(this.transform.position, Vector2.left, m_bkLength, m_kabe);
         return bklay;
     }
 }
+

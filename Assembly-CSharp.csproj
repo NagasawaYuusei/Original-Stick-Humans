@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStates.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerTimeLine.cs" />
     <Compile Include="Assets\Scripts\Player\bowScript.cs" />
     <Compile Include="Assets\Scripts\enemy\EnemyBase.cs" />
     <Compile Include="Assets\Scripts\enemy\bossEnemy.cs" />
