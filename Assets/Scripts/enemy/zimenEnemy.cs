@@ -28,20 +28,22 @@ public class zimenEnemy : EnemyBase
     IEnumerator Enemy()
     {
         yield return new WaitForSeconds(m_time);
-
-        m_playerPosition = m_playerOblect.transform.position;
-        m_enemyPosition = transform.position;
-
-        if (m_playerPosition.x > m_enemyPosition.x)
+        if(m_stop)
         {
-            m_enemyPosition.x = m_enemyPosition.x + m_speed;
-        }
-        else if (m_playerPosition.x < m_enemyPosition.x)
-        {
-            m_enemyPosition.x = m_enemyPosition.x - m_speed;
-        }
+            m_playerPosition = m_playerOblect.transform.position;
+            m_enemyPosition = transform.position;
 
-        transform.position = m_enemyPosition;
+            if (m_playerPosition.x > m_enemyPosition.x)
+            {
+                m_enemyPosition.x = m_enemyPosition.x + m_speed;
+            }
+            else if (m_playerPosition.x < m_enemyPosition.x)
+            {
+                m_enemyPosition.x = m_enemyPosition.x - m_speed;
+            }
+
+            transform.position = m_enemyPosition;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

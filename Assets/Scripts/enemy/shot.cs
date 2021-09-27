@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class shot : MonoBehaviour
+public class shot : MonoBehaviour, IPause
 {
     private GameObject playerObject;
     private Vector3 PlayerPosition;
     [SerializeField] float speed = 0f;
     [SerializeField] int enemyHP;
+    bool m_stop;
+
 
     void Start()
     {
@@ -15,9 +15,12 @@ public class shot : MonoBehaviour
     }
     void Update()
     {
-        PlayerPosition = playerObject.transform.position;
+        if(m_stop)
+        {
+            PlayerPosition = playerObject.transform.position;
 
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, PlayerPosition, speed);
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, PlayerPosition, speed);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -53,5 +56,15 @@ public class shot : MonoBehaviour
                 // AudioSource.PlayClipAtPoint(destroySound, transform.position);
             }
         }
+    }
+
+    void IPause.Pause()
+    {
+        m_stop = false;
+    }
+
+    void IPause.Resume()
+    {
+        m_stop = true;
     }
 }

@@ -12,9 +12,6 @@ public class ButtonScript : MonoBehaviour
     AudioSource audioSource;
     public void ButtonClassSetting()
     {
-        setting = GameObject.Find("Player States");
-        Destroy(setting);
-        
         audioSource = GetComponent<AudioSource>();
         audioSource.PlayOneShot(sound1);
         Time.timeScale = 1f;
@@ -27,6 +24,13 @@ public class ButtonScript : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.PlayOneShot(sound1);
         Invoke("Operating", 0.6f);
+    }
+
+    public void ButtonClassNext()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.PlayOneShot(sound2);
+        Invoke("Setting2", 2);
     }
 
     public void ButtonClassStart()

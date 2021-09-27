@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 
 public class UIScript : MonoBehaviour
 {
@@ -26,6 +26,8 @@ public class UIScript : MonoBehaviour
 
     [SerializeField] private GameObject pauseUI = default;
     Button button;
+    Button button2;
+    [SerializeField] EventSystem eventSystem;
 
     // Update is called once per frame
     void Start()
@@ -138,20 +140,20 @@ public class UIScript : MonoBehaviour
 
         if (Input.GetButtonDown("Fire3"))
         {
+            
             pauseUI.SetActive(!pauseUI.activeSelf);
 
             if (pauseUI.activeSelf)
             {
-                //Pauser.Pause(); ;
+                GameObject selectedObj = eventSystem.currentSelectedGameObject.gameObject;
                 button = GameObject.Find("Create").GetComponent<Button>();
-                button.Select();
-            }
-            else
-            {
-                //Pauser.Resume();
-            }
-
-
+                button2 = GameObject.Find("End").GetComponent<Button>();
+                if (selectedObj != button)
+                {
+                    button2.Select();
+                    button.Select();
+                }
+            }  
         }
     }
 }

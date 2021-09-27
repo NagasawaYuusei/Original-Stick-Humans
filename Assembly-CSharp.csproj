@@ -64,6 +64,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Button\Active.cs" />
+    <Compile Include="Assets\Scripts\Button\Attack.cs" />
+    <Compile Include="Assets\Scripts\Button\Passive.cs" />
+    <Compile Include="Assets\Scripts\Button\Start.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStates.cs" />
@@ -76,6 +80,8 @@
     <Compile Include="Assets\Scripts\enemy\shot.cs" />
     <Compile Include="Assets\Scripts\enemy\zimenEnemy.cs" />
     <Compile Include="Assets\Scripts\game\ButtonScript.cs" />
+    <Compile Include="Assets\Scripts\game\IPause.cs" />
+    <Compile Include="Assets\Scripts\game\PauseManager.cs" />
     <Compile Include="Assets\Scripts\game\SceneScript.cs" />
     <Compile Include="Assets\Scripts\game\UIScript.cs" />
     <Compile Include="Assets\Scripts\game\bgm.cs" />

@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPause
 {
+    [SerializeField] int m_num;
     float m_h;//水平横
     [SerializeField] float m_speed;//スピード
     [SerializeField] int m_Jumpryoku = 15;//ジャンプ力
@@ -56,12 +58,16 @@ public class Player : MonoBehaviour
     bool m_isRun;
     bool m_isStep;
     [SerializeField] GameObject m_swordCollider;
+    [SerializeField] GameObject m_swordCollider2;
     [SerializeField] int m_heal;
     bool m_isChange = true;
     [SerializeField] private GameObject m_modeUI = default;
     Button m_modeButton;
     static bool m_isStelth = false;
     float m_bowNowTime;
+    Vector2 m_velocity;
+    bool m_stop = true;
+    EventSystem m_eventSystem;
 
     public int Active
     {
@@ -190,17 +196,22 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        PlayerNow();
+        if(m_stop)
+        {
+            PlayerNow();
 
-        Jump();
+            Jump();
 
-        Fire1();
+            Fire1();
 
-        Fire2();
+            Fire2();
 
-        Step();
+            Step();
 
-        Death();
+            Death();
+
+            ChangeUI();
+        }
     }
 
     void FixedUpdate()
@@ -211,7 +222,7 @@ public class Player : MonoBehaviour
     ///<summary>プレイヤーのアップデートステータス</summary>///
     void PlayerNow()
     {
-        m_h = Input.GetAxis("Horizontal");//移動入力
+        m_h = Input.GetAxis("Horizontal"+m_num);//移動入力
 
         tmp = this.transform.position;//自分の位置
 
@@ -250,8 +261,35 @@ public class Player : MonoBehaviour
         {
             m_isRun = true;
         }
+        if(m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Player_Sword1")
+        {
+            m_swordCollider.tag = "Sword";
+        }
+        else if (m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Player_Sword2")
+        {
+            m_swordCollider.tag = "Sword2";
+        }
+        else if (m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Player_Sword3")
+        {
+            m_swordCollider.tag = "Sword3";
+        }
+        else if (m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Player_SwordFlow")
+        {
+            m_swordCollider.tag = "Sword2";
+        }
+        else if(m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Player_RunSword")
+        {
+            m_swordCollider.tag = "Sword";
+        }
+        else if (m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Player_Kick")
+        {
+            m_swordCollider.tag = "Abi";
+        }
+        else if (m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Player_Beam")
+        {
+            m_swordCollider2.tag = "Abi";
+        }
 
-        Debug.Log(m_attackTime);
     }
     ///<summary>移動処理</summary>///
     void idou()
@@ -269,7 +307,7 @@ public class Player : MonoBehaviour
     void Jump()
     {
         Vector2 velocity = m_rb.velocity;
-        if (Input.GetButtonDown("Jump"))//ジャンプ
+        if (Input.GetButtonDown("Jump"+m_num))//ジャンプ
         {
             if (s_passive == 0)
             {
@@ -288,7 +326,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        else if (!Input.GetButton("Jump") && m_rb.velocity.y > 0)
+        else if (!Input.GetButton("Jump"+m_num) && m_rb.velocity.y > 0)
         {
             // 上昇中にジャンプボタンを離したら上昇を減速する
             velocity.y *= m_gravityDrag;
@@ -301,7 +339,7 @@ public class Player : MonoBehaviour
 
         m_rb.velocity = velocity;
 
-        if (Input.GetButton("Jump") && s_passive == 1)
+        if (Input.GetButton("Jump"+m_num) && s_passive == 1)
         {
             m_rb.gravityScale = 1;
         }
@@ -321,7 +359,7 @@ public class Player : MonoBehaviour
 
     void Sword()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1" + m_num))
         {
             m_anim.SetBool("Sword", true);
         }
@@ -331,11 +369,11 @@ public class Player : MonoBehaviour
     {
         m_bowNowTime = Time.deltaTime;
 
-        if (Input.GetButton("Fire1") || m_bowNowTime > m_bowtime)
+        if (Input.GetButton("Fire1"+m_num) || m_bowNowTime > m_bowtime)
         {
             m_attackTime += Time.deltaTime;
         }
-        if (Input.GetButtonUp("Fire1"))
+        if (Input.GetButtonUp("Fire1" + m_num))
         {
             if(0 < m_attackTime && m_attackTime < m_secondBowTime)
             {
@@ -391,7 +429,7 @@ public class Player : MonoBehaviour
     void Fire2()
     {
         m_skillTime += Time.deltaTime;
-        if (Input.GetButtonDown("Fire2") && m_isChange == true)
+        if (Input.GetButtonDown("Fire2"+m_num) && m_isChange)
         {
             if (m_skillTime >= m_bktime)
             {
@@ -509,7 +547,7 @@ public class Player : MonoBehaviour
     void Step()
     {
         m_nowStepTime += Time.deltaTime;
-        if (Input.GetButtonDown("Step") && m_nowStepTime > m_stepTime)
+        if (Input.GetButtonDown("Step"+m_num) && m_nowStepTime > m_stepTime)
         {
             if (m_scaleX > 0)
             {
@@ -527,6 +565,21 @@ public class Player : MonoBehaviour
         else
         {
             m_isStep = false;
+        }
+    }
+
+    void ChangeUI()
+    {
+        if (Input.GetButtonDown("Fire2") && !m_isChange)
+        {
+            GameObject selectedObj = m_eventSystem.currentSelectedGameObject.gameObject;
+            Button button = GameObject.Find("Atack Mode").GetComponent<Button>();
+            Button button2 = GameObject.Find("Passive Mode").GetComponent<Button>();
+            if (selectedObj != button)
+            {
+                button2.Select();
+                button.Select();
+            }
         }
     }
     ///<summary>接触判定処理</summary>///
@@ -567,19 +620,14 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Change"))
         {
             m_isChange = false;
-            if (Input.GetButtonDown("Fire2") && m_isChange == false)
-            {
-                if (m_modeUI.activeSelf)
-                {
-                    //Pauser.Pause();
-                    m_modeButton = GameObject.Find("Atack Mode").GetComponent<Button>();
-                    m_modeButton.Select();
-                }
-                else
-                {
-                    //Pauser.Resume();
-                }
-            }
+        }
+    }
+
+    private void Changed(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Change"))
+        {
+            m_isChange = true;
         }
     }
     void Heal(Collider2D collision)
@@ -595,13 +643,7 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
-    private void Changed(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Change"))
-        {
-            m_isChange = true;
-        }
-    }
+    
 
     ///<summary>死亡処理</summary>///
     void Death()
@@ -659,5 +701,22 @@ public class Player : MonoBehaviour
     {
         bool bklay = Physics2D.Raycast(this.transform.position, Vector2.left, m_isBkLength, m_kabe);
         return bklay;
+    }
+    void IPause.Pause()
+    {
+        m_anim.speed = 0;
+        m_stop = false;
+        m_velocity = m_rb.velocity;
+        m_rb.Sleep();
+        m_rb.simulated = false;
+    }
+
+    void IPause.Resume()
+    {
+        m_anim.speed = 1;
+        m_stop = true;
+        m_rb.simulated = true;
+        m_rb.WakeUp();
+        m_rb.velocity = m_velocity;
     }
 }

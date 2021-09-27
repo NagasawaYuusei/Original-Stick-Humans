@@ -23,7 +23,7 @@ public class longEnemy : EnemyBase
 
     void Update()
     {
-        if (m_sr.isVisible && m_srPlayer.color == m_player.Colors[0] || m_sr.isVisible && m_srPlayer.color == m_player.Colors[2])
+        if (m_sr.isVisible && !Player.IsStelth)
         {
             StartCoroutine(Enemy());
         }
@@ -32,25 +32,29 @@ public class longEnemy : EnemyBase
     IEnumerator Enemy()
     {
         yield return new WaitForSeconds(m_time);
-
-        Vector2 tmp = this.transform.position;
-
-        timeElapsed += Time.deltaTime;
-
-        if (timeElapsed >= timeOut)
+        if(m_stop)
         {
-            if (m_playerPosition.x < m_enemyPosition.x)
-            {
-                Instantiate(m_shot, new Vector2(tmp.x - 3.5f, tmp.y + 4), this.transform.rotation);
-            }
-            else if (m_playerPosition.x > m_enemyPosition.x)
-            {
-                Instantiate(m_shot, new Vector2(tmp.x + 3.5f, tmp.y + 4), this.transform.rotation);
-            }
+            Vector2 tmp = this.transform.position;
 
-            timeElapsed = 0.0f;
-            //audioSource.PlayOneShot(soundbeem);
+            timeElapsed += Time.deltaTime;
+
+            if (timeElapsed >= timeOut)
+            {
+                if (m_playerPosition.x < m_enemyPosition.x)
+                {
+                    Instantiate(m_shot, new Vector2(tmp.x - 3.5f, tmp.y + 4), this.transform.rotation);
+                }
+                else if (m_playerPosition.x > m_enemyPosition.x)
+                {
+                    Instantiate(m_shot, new Vector2(tmp.x + 3.5f, tmp.y + 4), this.transform.rotation);
+                }
+
+                timeElapsed = 0.0f;
+                //audioSource.PlayOneShot(soundbeem);
+            }
         }
+
+      
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

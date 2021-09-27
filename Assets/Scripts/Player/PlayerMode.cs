@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Playables;
 
 public class PlayerMode : MonoBehaviour
 {
@@ -18,7 +19,6 @@ public class PlayerMode : MonoBehaviour
         {
             return m_attackmode;
         }
-
     }
 
     public int Passivemode
@@ -27,7 +27,6 @@ public class PlayerMode : MonoBehaviour
         {
             return m_passivemode;
         }
-
     }
 
     public int Activemode
@@ -36,7 +35,13 @@ public class PlayerMode : MonoBehaviour
         {
             return m_activemode;
         }
+    }
 
+    private void Start()
+    {
+        m_attackmode = PlayerStates.AttackStates;
+        m_passivemode = PlayerStates.PassiveStates;
+        m_activemode = PlayerStates.ActiveStates;
     }
 
     public void Attack()
@@ -45,7 +50,7 @@ public class PlayerMode : MonoBehaviour
         {
             m_attackmode = 1;
             ChangeButton.GetComponentInChildren<Text>().text = "Bow";
-            if(PlayerStates.ActiveStates == 4)
+            if (PlayerStates.ActiveStates == 4)
             {
                 m_activemode = 5;
                 ChangeButton2.GetComponentInChildren<Text>().text = "Kick";
@@ -55,7 +60,7 @@ public class PlayerMode : MonoBehaviour
         {
             m_attackmode = 0;
             ChangeButton.GetComponentInChildren<Text>().text = "Sword";
-            if(PlayerStates.ActiveStates == 5)
+            if (PlayerStates.ActiveStates == 5)
             {
                 m_activemode = 4;
                 ChangeButton2.GetComponentInChildren<Text>().text = "Beam";
@@ -115,7 +120,6 @@ public class PlayerMode : MonoBehaviour
             {
                 m_activemode = 5;
                 ChangeButton.GetComponentInChildren<Text>().text = "Kick";
-                Debug.Log("a");
             }
         }
         else if (m_activemode == 4 || m_activemode == 5)

@@ -5,7 +5,7 @@ using System.Collections;
 
 [RequireComponent(typeof(Collider2D))]
 
-public abstract class EnemyBase : MonoBehaviour
+public abstract class EnemyBase : MonoBehaviour, IPause
 {
     [SerializeField] GameObject m_enemy;
     [SerializeField] int m_enemyMaxHp = 0;
@@ -22,6 +22,10 @@ public abstract class EnemyBase : MonoBehaviour
 
     [SerializeField] AudioClip m_sound = default;
 
+    Animator m_anim = null;
+    Rigidbody2D m_rb;
+    protected bool m_stop = true;
+
     public virtual void StartSet()
     {
         m_sr = GetComponent<SpriteRenderer>();
@@ -37,6 +41,8 @@ public abstract class EnemyBase : MonoBehaviour
         m_slider.value = m_enemyHp;
 
         audioSource = GetComponent<AudioSource>();
+        m_anim = GetComponent<Animator>();
+        m_rb = GetComponent<Rigidbody2D>();
     }
 
     public virtual void Damage(Collider2D collision)
@@ -75,34 +81,48 @@ public abstract class EnemyBase : MonoBehaviour
         {
             Attack(5);
         }
+
+        Debug.Log(m_enemyHp);
     }
 
     public virtual void BossDamage(Collider2D collision)
     {
+        if (collision.gameObject.CompareTag("Sword"))
+        {
+            BossAttack(3);
+        }
+
+        if (collision.gameObject.CompareTag("Sword2"))
+        {
+            BossAttack(5);
+        }
+
+        if (collision.gameObject.CompareTag("Sword3"))
+        {
+            BossAttack(7);
+        }
+
         if (collision.gameObject.CompareTag("Bow"))
         {
-            m_enemyHp -= 2;
-            m_slider.value = m_enemyHp;
-            Destroy(collision.gameObject);
-
-            if (m_enemyHp <= 0)
-            {
-                this.gameObject.SetActive(false);
-                StartCoroutine(Gameclear());
-            }
+            BossAttack(5);
         }
 
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Bow2"))
         {
-            m_enemyHp -= 1;
-            m_slider.value = m_enemyHp;
-
-            if (m_enemyHp <= 0)
-            {
-                this.gameObject.SetActive(false);
-                StartCoroutine(Gameclear());
-            }
+            BossAttack(7);
         }
+
+        if (collision.gameObject.CompareTag("Bow3"))
+        {
+            BossAttack(10);
+        }
+
+        if (collision.gameObject.CompareTag("Abi"))
+        {
+            BossAttack(5);
+        }
+
+        Debug.Log(m_enemyHp);
     }
 
     void Attack(int damage)
@@ -115,6 +135,17 @@ public abstract class EnemyBase : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    void BossAttack(int damage)
+    {
+        m_enemyHp -= damage;
+        m_slider.value = m_enemyHp;
+
+        if (m_enemyHp <= 0)
+        {
+            this.gameObject.SetActive(false);
+            StartCoroutine(Gameclear());
+        }
+    }
 
     IEnumerator Gameclear()
     {
@@ -122,5 +153,18 @@ public abstract class EnemyBase : MonoBehaviour
         SceneManager.LoadScene("Gameclear");
     }
 
+    void IPause.Pause()
+    {
+        m_anim.speed = 0;
+        m_stop = false;
+        m_rb.Sleep();
+    }
 
+    void IPause.Resume()
+    {
+        m_anim.speed = 1;
+        m_stop = true;
+        m_rb.WakeUp();
+
+    }
 }

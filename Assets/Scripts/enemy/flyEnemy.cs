@@ -16,7 +16,7 @@ public class flyEnemy : EnemyBase
 
     void Update()
     {
-        if (m_sr.isVisible && m_srPlayer.color == m_player.Colors[0] || m_sr.isVisible && m_srPlayer.color == m_player.Colors[2])
+        if (m_sr.isVisible && !Player.IsStelth)
         {
             StartCoroutine(Enemy());
         }
@@ -26,9 +26,12 @@ public class flyEnemy : EnemyBase
     {
         yield return new WaitForSeconds(m_time);
 
-        m_playerPosition = m_playerOblect.transform.position;
+        if(m_stop)
+        {
+            m_playerPosition = m_playerOblect.transform.position;
 
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, m_playerPosition, m_speed);
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, m_playerPosition, m_speed);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
